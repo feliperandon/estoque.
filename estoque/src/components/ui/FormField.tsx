@@ -29,3 +29,5 @@ export const FormField = ({ label, error, children }: FormFieldProps) => {
     </div>
   );
 };
+
+export default FormField;

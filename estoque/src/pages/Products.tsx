@@ -1,7 +1,4 @@
-import { FormField } from "@/components/ui/FormField";
-import Input from "@/components/ui/Input";
-
-import Select from "@/components/ui/Select";
+import { FormField, Input, Select } from "@/components/ui/";
 import { useState } from "react";
 
 const Products = () => {
