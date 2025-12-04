@@ -1,8 +1,10 @@
-import { FormField, Input, Select } from "@/components/ui/";
+import { Button, FormField, Input, Select } from "@/components/ui/";
+import { Modal } from "@/components/ui/Modal";
 import { useState } from "react";
 
 const Products = () => {
   const [categoria, setCategoria] = useState<string | undefined>();
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="p-6">
@@ -23,6 +25,18 @@ const Products = () => {
           ]}
         />
       </FormField>
+      <Modal.Root open={open} onOpenChange={setOpen}>
+        <Modal.Trigger>
+          <Button variant="primary">Adicionar Produto</Button>
+        </Modal.Trigger>
+
+        <Modal.Content
+          title="Adicionar Produto"
+          description="Crie um novo produto"
+        >
+          <div className="text-black">Conteúdo do formulário vai aqui</div>
+        </Modal.Content>
+      </Modal.Root>
     </div>
   );
 };
