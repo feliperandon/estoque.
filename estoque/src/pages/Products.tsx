@@ -1,4 +1,5 @@
 import { Button, FormField, Input, Select } from "@/components/ui/";
+import Card from "@/components/ui/Card";
 import { Modal } from "@/components/ui/Modal";
 import { useState } from "react";
 
@@ -37,6 +38,10 @@ const Products = () => {
           <div className="text-black">Conteúdo do formulário vai aqui</div>
         </Modal.Content>
       </Modal.Root>
+      <Card padding="lg" className="p-12">
+        Oi
+      </Card>
+      <Card variant="shadow">Com sombra</Card>
     </div>
   );
 };
