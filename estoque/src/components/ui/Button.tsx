@@ -1,3 +1,5 @@
+import { cn } from "@/lib/cn";
+
 type Variant = "primary" | "outline" | "ghost";
 
 type Size = "sm" | "md" | "lg";
@@ -30,15 +32,16 @@ const Button = ({
     lg: "px-5 py-3 text-lg",
   };
 
-  const variantClass = variantClasses[variant ?? "primary"];
-  const sizeClass = sizeClasses[size ?? "md"];
-
-  const classes = `${baseClasses} ${variantClass} ${sizeClass} ${
-    className ?? ""
-  }`;
-
   return (
-    <button className={classes} {...props}>
+    <button
+      className={cn(
+        baseClasses,
+        variantClasses[variant],
+        sizeClasses[size],
+        className
+      )}
+      {...props}
+    >
       {children}
     </button>
   );
