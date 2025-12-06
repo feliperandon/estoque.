@@ -1,47 +1,17 @@
 import Header from "@/components/layout/Header";
-import { Button, FormField, Input, Select } from "@/components/ui/";
-import Card from "@/components/ui/Card";
-import { Modal } from "@/components/ui/Modal";
-import { useState } from "react";
+
+const products = [
+  { id: "1", name: "Camiseta Azul", quantity: 10 },
+  { id: "2", name: "Pulseira Rosa", quantity: 5 },
+  { id: "4", name: "Bolsa Preta", quantity: 3 },
+  { id: "5", name: "Bolsa Preta", quantity: 3 },
+  { id: "6", name: "Bolsa Preta", quantity: 3 },
+];
 
 const Products = () => {
-  const [categoria, setCategoria] = useState<string | undefined>();
-  const [open, setOpen] = useState(false);
-
   return (
-    <div className="p-6">
-      <Header title="Produtos" description="Gerencie seus produtos" />
-      <FormField>
-        <Input placeholder="Digite algo..." />
-      </FormField>
-      <FormField label="Categoria">
-        <Select
-          value={categoria}
-          onChange={setCategoria}
-          placeholder="Categoria"
-          options={[
-            { value: "tecido", label: "Tecido" },
-            { value: "linha", label: "Linha" },
-            { value: "botao", label: "Botao" },
-          ]}
-        />
-      </FormField>
-      <Modal.Root open={open} onOpenChange={setOpen}>
-        <Modal.Trigger>
-          <Button variant="primary">Adicionar Produto</Button>
-        </Modal.Trigger>
-
-        <Modal.Content
-          title="Adicionar Produto"
-          description="Crie um novo produto"
-        >
-          <div className="text-black">Conteúdo do formulário vai aqui</div>
-        </Modal.Content>
-      </Modal.Root>
-      <Card padding="lg" className="p-12">
-        Oi
-      </Card>
-      <Card variant="shadow">Com sombra</Card>
+    <div>
+      <Header title="Produtos" description="Gerencie seus produtos." />
     </div>
   );
 };
