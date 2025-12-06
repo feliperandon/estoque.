@@ -1,4 +1,5 @@
 import Header from "@/components/layout/Header";
+import ProductCard from "@/features/products/components/ProductCard";
 
 const products = [
   { id: "1", name: "Camiseta Azul", quantity: 10 },
@@ -12,6 +13,11 @@ const Products = () => {
   return (
     <div>
       <Header title="Produtos" description="Gerencie seus produtos." />
+      <div className="grid grid-cols-4 gap-4">
+        {products.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
     </div>
   );
 };
