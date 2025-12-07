@@ -1,12 +1,34 @@
 import { create } from "zustand";
 import type { Product } from "../types/product";
 
-const initialProducts = [
-  { id: "1", name: "Camiseta Azul", quantity: 10 },
-  { id: "2", name: "Pulseira Rosa", quantity: 5 },
-  { id: "4", name: "Bolsa Preta", quantity: 3 },
-  { id: "5", name: "Bolsa Preta", quantity: 3 },
-  { id: "6", name: "Bolsa Preta", quantity: 3 },
+const initialProducts: Product[] = [
+  {
+    id: "1",
+    name: "Camiseta Azul",
+    quantity: 10,
+    price: 59.9,
+    imageUrl: "https://via.placeholder.com/150",
+    description: "Produto inicial de exemplo",
+    categories: ["Moda"],
+  },
+  {
+    id: "2",
+    name: "Camiseta Verde",
+    quantity: 10,
+    price: 59.9,
+    imageUrl: "https://via.placeholder.com/150",
+    description: "Produto inicial de exemplo",
+    categories: ["Moda"],
+  },
+  {
+    id: "3",
+    name: "Camiseta Rosa",
+    quantity: 10,
+    price: 59.9,
+    imageUrl: "https://via.placeholder.com/150",
+    description: "Produto inicial de exemplo",
+    categories: ["Moda"],
+  },
 ];
 
 type ProductState = {

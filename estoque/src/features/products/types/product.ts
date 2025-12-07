@@ -7,4 +7,9 @@ export type Product = {
   imageUrl?: string;
   timeSpent?: number;
   categories?: string[];
+
+  materials?: {
+    materialId: string;
+    quantity: number;
+  }[];
 };
