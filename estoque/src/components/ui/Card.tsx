@@ -14,12 +14,12 @@ const Card = ({
   className,
 }: CardProps) => {
   const baseClasses =
-    "bg-white rounded-md border border-gray-200 text-gray-900";
+    "rounded-xl bg-[#2F2F2F] border border-[#3A3A3A] text-white";
 
   const variantClasses = {
-    default: "bg-white border border-gray-200 shadow-sm",
-    shadow: "bg-white shadow-md border-0",
-    outline: "bg-white border border-gray-300 shadow-none",
+    default: "shadow-sm",
+    shadow: "shadow-lg",
+    outline: "border border-[#4A4A4A]",
   };
 
   const paddingClasses = {
