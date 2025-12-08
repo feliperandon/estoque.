@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useProductsStore } from "../hooks/useProductsStore";
 
-import { Input, Button, FormField } from "@/components/ui";
+import { Input, Button, FormField, Textarea } from "@/components/ui";
 
 const productSchema = z.object({
   name: z.string().min(1, "O nome é obrigatório"),
@@ -54,7 +54,7 @@ const ProductForm = ({ onSubmitSuccess }: ProductFormProps) => {
         label="Descrição"
         error={form.formState.errors.description?.message}
       >
-        <Input {...form.register("description")} />
+        <Textarea rows={4} {...form.register("description")} />
       </FormField>
 
       <FormField
