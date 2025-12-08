@@ -1,64 +1,51 @@
 import { NavLink } from "react-router";
 
+import {
+  Boxes,
+  DollarSign,
+  LayoutDashboard,
+  Package,
+  Users,
+} from "lucide-react";
+
+import { cn } from "@/lib/cn";
+
 const Sidebar = () => {
+  const menu = [
+    { label: "Dashboard", icon: LayoutDashboard, to: "/" },
+    { label: "Produtos", icon: Package, to: "/products" },
+    { label: "Materiais", icon: Boxes, to: "/materials" },
+    { label: "Vendas", icon: DollarSign, to: "/sales" },
+    { label: "Clientes", icon: Users, to: "/clients" },
+  ];
   return (
-    <aside className="w-64 p-4 bg-white border-r border-gray-200">
-      <div className="mb-6">
-        <h2 className="text-xl font-bold">Estoque.</h2>
-        <p className="text-sm text-gray-500">seu controle de invetário</p>
+    <aside className="w-64 bg-[#EDEDED] border h-screen flex flex-col p-6">
+      <div className="my-10 items-center flex flex-col">
+        <h1 className="text-4xl font-medium tracking-tight">ESTOQUE.</h1>
+        <p className="text-md text-gray-600 mt-1">seu controle de inventário</p>
       </div>
 
-      <nav className="space-y-1 flex flex-col mt-8">
-        <NavLink
-          to="/dashboard"
-          className={({ isActive }) =>
-            isActive
-              ? "bg-gray-300 font-medium text-gray-900"
-              : "text-gray-700 hover:bg-gray-100 rounded-md"
-          }
-        >
-          Dashboard
-        </NavLink>
-        <NavLink
-          to="/products"
-          className={({ isActive }) =>
-            isActive
-              ? "bg-gray-300 font-medium text-gray-900"
-              : "text-gray-700 hover:bg-gray-100 rounded-md"
-          }
-        >
-          Produtos
-        </NavLink>
-        <NavLink
-          to="/materials"
-          className={({ isActive }) =>
-            isActive
-              ? "bg-gray-300 font-medium text-gray-900"
-              : "text-gray-700 hover:bg-gray-100 rounded-md"
-          }
-        >
-          Materiais
-        </NavLink>
-        <NavLink
-          to="/sales"
-          className={({ isActive }) =>
-            isActive
-              ? "bg-gray-300 font-medium text-gray-900"
-              : "text-gray-700 hover:bg-gray-100 rounded-md"
-          }
-        >
-          Vendas
-        </NavLink>
-        <NavLink
-          to="/clients"
-          className={({ isActive }) =>
-            isActive
-              ? "bg-gray-300 font-medium text-gray-900"
-              : "text-gray-700 hover:bg-gray-100 rounded-md"
-          }
-        >
-          Clientes
-        </NavLink>
+      <nav className="flex flex-col gap-2">
+        {menu.map((item) => {
+          const Icon = item.icon;
+
+          return (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                cn(
+                  "flex items-center gap-3 px-3 py-2 rounded-md text-md font-medium leading-none",
+                  "text-gray-800 hover:bg-gray-300/40",
+                  isActive && "bg-gray-300/70"
+                )
+              }
+            >
+              <Icon className="w-5 h-5 shrink-0" />
+              <span className="flex items-center">{item.label}</span>
+            </NavLink>
+          );
+        })}
       </nav>
     </aside>
   );
