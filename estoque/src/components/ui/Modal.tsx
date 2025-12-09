@@ -21,16 +21,16 @@ const Content = ({ title, description, children }: ModalContentProps) => {
 
       <Dialog.Content
         className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-        bg-white shadow-xl rounded-xl p-6 w-[90%] max-w-lg outline-none"
+        bg-[#2F2F2F] shadow-xl rounded-xl p-6 w-[90%] max-w-lg outline-none"
       >
         {title && (
-          <Dialog.Title className="text-xl font-semibold mb-1">
+          <Dialog.Title className="text-xl font-semibold text-white mb-1">
             {title}
           </Dialog.Title>
         )}
 
         {description && (
-          <Dialog.Description className="text-sm text-gray-600 mb-4">
+          <Dialog.Description className="text-sm text-white mb-4">
             {description}
           </Dialog.Description>
         )}
