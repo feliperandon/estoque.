@@ -5,11 +5,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useProductsStore } from "../hooks/useProductsStore";
 
 import { Input, Button, FormField, Textarea } from "@/components/ui";
+import ImageUpload from "@/components/ui/ImageUpload";
 
 const productSchema = z.object({
   name: z.string().min(1, "O nome é obrigatório"),
   quantity: z.coerce.number().min(1, "A quantidade mínima é 1"),
   description: z.string().optional(),
+  imageUrl: z.string().optional(),
   price: z.coerce.number().min(0).optional(),
   timeSpent: z.coerce.number().min(0).optional(),
 });
@@ -24,11 +26,14 @@ const ProductForm = ({ onSubmitSuccess }: ProductFormProps) => {
     defaultValues: {
       name: "",
       quantity: 1,
+      imageUrl: "",
       description: "",
       price: 0,
       timeSpent: 0,
     },
   });
+
+  const { setValue } = form;
 
   const addProduct = useProductsStore((state) => state.addProduct);
 
@@ -37,6 +42,7 @@ const ProductForm = ({ onSubmitSuccess }: ProductFormProps) => {
       id: crypto.randomUUID(),
       name: data.name,
       quantity: data.quantity,
+      imageUrl: data.imageUrl,
       price: data.price,
       timeSpent: data.timeSpent,
       description: data.description,
@@ -47,9 +53,24 @@ const ProductForm = ({ onSubmitSuccess }: ProductFormProps) => {
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <FormField>
+        <ImageUpload
+          onChangeFile={(file) => {
+            if (!file) {
+              setValue("imageUrl", "");
+              return;
+            }
+
+            const url = URL.createObjectURL(file);
+            setValue("imageUrl", url);
+          }}
+        />
+      </FormField>
+
       <FormField label="Nome" error={form.formState.errors.name?.message}>
         <Input {...form.register("name")} />
       </FormField>
+
       <FormField
         label="Descrição"
         error={form.formState.errors.description?.message}
@@ -63,9 +84,11 @@ const ProductForm = ({ onSubmitSuccess }: ProductFormProps) => {
       >
         <Input type="number" {...form.register("quantity")} />
       </FormField>
+
       <FormField label="Preço" error={form.formState.errors.price?.message}>
         <Input {...form.register("price")} />
       </FormField>
+
       <FormField
         label="Horas gastas"
         error={form.formState.errors.timeSpent?.message}
