@@ -4,8 +4,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useProductsStore } from "../hooks/useProductsStore";
 
-import { Input, Button, FormField, Textarea } from "@/components/ui";
-import ImageUpload from "@/components/ui/ImageUpload";
+import {
+  Input,
+  Button,
+  FormField,
+  Textarea,
+  ImageUpload,
+} from "@/components/ui";
 
 const productSchema = z.object({
   name: z.string().min(1, "O nome é obrigatório"),

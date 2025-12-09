@@ -1,12 +1,14 @@
 import { useState } from "react";
 
 import Header from "@/components/layout/Header";
-import { Button } from "@/components/ui";
+
+import { Button, Searchbar } from "@/components/ui";
 import { Modal } from "@/components/ui/Modal";
+
 import ProductCard from "@/features/products/components/ProductCard";
 import ProductForm from "@/features/products/components/ProductForm";
+
 import { useProductsStore } from "@/features/products/hooks/useProductsStore";
-import Searchbar from "@/components/ui/Searchbar";
 
 const Products = () => {
   const products = useProductsStore((state) => state.products);

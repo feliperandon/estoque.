@@ -18,7 +18,7 @@ export const FormField = ({ label, error, children }: FormFieldProps) => {
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label className="text-sm font-medium" htmlFor={id}>
+        <label className="text-sm font-medium text-white" htmlFor={id}>
           {label}
         </label>
       )}
