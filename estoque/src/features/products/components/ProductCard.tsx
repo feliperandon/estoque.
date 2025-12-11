@@ -34,7 +34,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       </div>
 
       {product.categories && product.categories.length > 0 && (
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           {product.categories.map((cat) => (
             <span
               key={cat}
@@ -52,7 +52,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
       )}
 
-      <div className="h-[px] w-full bg-[#3A3A3A]"></div>
+      <div className="h-px w-full bg-white/20 mb-6"></div>
 
       <div className="flex items-center justify-between text-xs text-gray-300">
         <div className="flex flex-col gap-2">
