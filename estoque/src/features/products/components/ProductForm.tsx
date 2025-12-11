@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useProductsStore } from "../hooks/useProductsStore";
+import { useCategoriesStore } from "../hooks/useCategoriesStore";
 
 import {
   Input,
@@ -10,6 +11,7 @@ import {
   FormField,
   Textarea,
   ImageUpload,
+  CategorySelect,
 } from "@/components/ui";
 
 const productSchema = z.object({
@@ -19,6 +21,7 @@ const productSchema = z.object({
   imageUrl: z.string().optional(),
   price: z.coerce.number().min(0).optional(),
   timeSpent: z.coerce.number().min(0).optional(),
+  categories: z.array(z.string()).optional(),
 });
 
 type ProductFormProps = {
@@ -35,12 +38,15 @@ const ProductForm = ({ onSubmitSuccess }: ProductFormProps) => {
       description: "",
       price: 0,
       timeSpent: 0,
+      categories: [],
     },
   });
 
   const { setValue } = form;
 
   const addProduct = useProductsStore((state) => state.addProduct);
+
+  const categories = useCategoriesStore((state) => state.categories);
 
   const onSubmit = (data: z.infer<typeof productSchema>) => {
     addProduct({
@@ -51,6 +57,7 @@ const ProductForm = ({ onSubmitSuccess }: ProductFormProps) => {
       price: data.price,
       timeSpent: data.timeSpent,
       description: data.description,
+      categories: data.categories || [],
     });
     onSubmitSuccess();
     form.reset();
@@ -88,6 +95,16 @@ const ProductForm = ({ onSubmitSuccess }: ProductFormProps) => {
         error={form.formState.errors.quantity?.message}
       >
         <Input type="number" {...form.register("quantity")} />
+      </FormField>
+
+      <FormField label="Categorias">
+        <CategorySelect
+          options={categories}
+          value={form.watch("categories") || []}
+          onChange={(newValue) => {
+            setValue("categories", newValue);
+          }}
+        />
       </FormField>
 
       <FormField label="Preço" error={form.formState.errors.price?.message}>
