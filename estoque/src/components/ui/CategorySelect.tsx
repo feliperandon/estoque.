@@ -75,7 +75,7 @@ const CategorySelect = ({
     rounded-md cursor-pointer justify-between
     hover:bg-gray-100 transition-colors"
               >
-                <div className="flex gap-3">
+                <div className="flex gap-3 items-center">
                   <Checkbox.Root
                     id={id}
                     className=" w-4 h-4 rounded border border-gray-400 
