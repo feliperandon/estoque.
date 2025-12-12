@@ -1,12 +1,40 @@
+import { Pen, Trash } from "lucide-react";
 import type { Product } from "../types/product";
 
 type ProductCardProps = {
   product: Product;
+  onEdit: (product: Product) => void;
+  onRemove: (productId: string) => void;
 };
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, onEdit, onRemove }: ProductCardProps) => {
   return (
-    <div className="bg-[#2F2F2F] rounded-xl p-4 flex flex-col gap-3 w-full shadow-md border border-[#3A3A3A]">
+    <div className="bg-[#2F2F2F] relative group rounded-xl p-4 flex flex-col gap-3 w-full shadow-md border border-[#3A3A3A]">
+      <div
+        className="
+           absolute inset-0 
+    bg-black/40 
+    opacity-0 
+    group-hover:opacity-100 
+    transition-opacity 
+    duration-200
+    flex items-center justify-center
+    gap-4
+        "
+      >
+        <button
+          className="bg-white/10 hover:bg-white/20 text-white p-3 rounded-lg transition backdrop-blur-sm g"
+          onClick={() => onEdit(product)}
+        >
+          <Pen />
+        </button>
+        <button
+          className="bg-white/10 hover:bg-white/20 text-red-700 p-3 rounded-lg transition backdrop-blur-sm"
+          onClick={() => onRemove(product.id)}
+        >
+          <Trash />
+        </button>
+      </div>
       <div className="w-full h-[220px] bg-[#3A3A3A] rounded-lg overflow-hidden">
         {product.imageUrl ? (
           <img
