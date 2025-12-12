@@ -14,6 +14,9 @@ import {
   CategorySelect,
 } from "@/components/ui";
 
+import type { Product } from "../types/product";
+import { useEffect } from "react";
+
 const productSchema = z.object({
   name: z.string().min(1, "O nome é obrigatório"),
   quantity: z.coerce.number().min(1, "A quantidade mínima é 1"),
@@ -26,9 +29,10 @@ const productSchema = z.object({
 
 type ProductFormProps = {
   onSubmitSuccess: () => void;
+  initialData?: Product | null;
 };
 
-const ProductForm = ({ onSubmitSuccess }: ProductFormProps) => {
+const ProductForm = ({ onSubmitSuccess, initialData }: ProductFormProps) => {
   const form = useForm({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -42,25 +46,50 @@ const ProductForm = ({ onSubmitSuccess }: ProductFormProps) => {
     },
   });
 
+  useEffect(() => {
+    initialData
+      ? form.reset(initialData)
+      : form.reset({
+          name: "",
+          quantity: 1,
+          imageUrl: "",
+          description: "",
+          price: 0,
+          timeSpent: 0,
+          categories: [],
+        });
+  }, [initialData]);
+
   const { setValue } = form;
 
   const addProduct = useProductsStore((state) => state.addProduct);
+  const updateProduct = useProductsStore((state) => state.updateProduct);
 
   const categories = useCategoriesStore((state) => state.categories);
 
   const onSubmit = (data: z.infer<typeof productSchema>) => {
-    addProduct({
-      id: crypto.randomUUID(),
-      name: data.name,
-      quantity: data.quantity,
-      imageUrl: data.imageUrl,
-      price: data.price,
-      timeSpent: data.timeSpent,
-      description: data.description,
-      categories: data.categories || [],
-    });
+    initialData
+      ? updateProduct(initialData.id, data)
+      : addProduct({
+          id: crypto.randomUUID(),
+          name: data.name,
+          quantity: data.quantity,
+          imageUrl: data.imageUrl,
+          price: data.price,
+          timeSpent: data.timeSpent,
+          description: data.description,
+          categories: data.categories || [],
+        });
     onSubmitSuccess();
-    form.reset();
+    form.reset({
+      name: "",
+      quantity: 1,
+      imageUrl: "",
+      description: "",
+      price: 0,
+      timeSpent: 0,
+      categories: [],
+    });
   };
 
   return (
@@ -75,6 +104,7 @@ const ProductForm = ({ onSubmitSuccess }: ProductFormProps) => {
 
             const url = URL.createObjectURL(file);
             setValue("imageUrl", url);
+            form.watch("imageUrl");
           }}
         />
       </FormField>

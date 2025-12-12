@@ -10,9 +10,30 @@ import ProductForm from "@/features/products/components/ProductForm";
 
 import { useProductsStore } from "@/features/products/hooks/useProductsStore";
 
+import type { Product } from "@/features/products/types/product";
+
 const Products = () => {
   const products = useProductsStore((state) => state.products);
   const [isOpen, setIsOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+
+  const removeProduct = useProductsStore((state) => state.removeProduct);
+
+  const handleEditProduct = (product: Product) => {
+    setEditingProduct(product);
+    setIsOpen(true);
+  };
+
+  const handleRemoveProduct = (productId: string) => {
+    removeProduct(productId);
+  };
+
+  const handleModalChange = (open: boolean) => {
+    setIsOpen(open);
+    if (!open) {
+      setEditingProduct(null);
+    }
+  };
 
   return (
     <div className="bg-[#474747] min-h-screen">
@@ -20,20 +41,30 @@ const Products = () => {
       <div className="h-px w-full bg-white/20 mb-6"></div>
       <div className="flex justify-between mt-4 mb-4">
         <Searchbar />
-        <Modal.Root open={isOpen} onOpenChange={setIsOpen}>
+        <Modal.Root open={isOpen} onOpenChange={handleModalChange}>
           <Modal.Trigger>
             <Button>Novo Produto</Button>
           </Modal.Trigger>
 
-          <Modal.Content title="Adicionar produto">
-            <ProductForm onSubmitSuccess={() => setIsOpen(false)} />
+          <Modal.Content
+            title={editingProduct ? "Editar Produto" : "Novo Produto"}
+          >
+            <ProductForm
+              onSubmitSuccess={() => setIsOpen(false)}
+              initialData={editingProduct}
+            />
           </Modal.Content>
         </Modal.Root>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 items-start">
         {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard
+            key={product.id}
+            product={product}
+            onEdit={handleEditProduct}
+            onRemove={handleRemoveProduct}
+          />
         ))}
       </div>
     </div>
