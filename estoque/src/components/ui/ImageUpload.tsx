@@ -4,9 +4,10 @@ import Input from "./Input";
 
 type ImageUploadProps = {
   onChangeFile?: (file: File | null) => void;
+  value?: string;
 };
 
-const ImageUpload = ({ onChangeFile }: ImageUploadProps) => {
+const ImageUpload = ({ onChangeFile, value }: ImageUploadProps) => {
   const [preview, setPreview] = useState<string>("");
 
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -22,11 +23,19 @@ const ImageUpload = ({ onChangeFile }: ImageUploadProps) => {
   };
 
   useEffect(() => {
+    value ? setPreview(value) : setPreview("");
+  }, [value]);
+
+  useEffect(() => {
     if (lastPreviewRef.current && lastPreviewRef.current.startsWith("blob:")) {
       URL.revokeObjectURL(lastPreviewRef.current);
     }
 
-    lastPreviewRef.current = preview;
+    if (preview && preview.startsWith("blob:")) {
+      lastPreviewRef.current = preview;
+    } else {
+      lastPreviewRef.current = null;
+    }
 
     return () => {
       if (

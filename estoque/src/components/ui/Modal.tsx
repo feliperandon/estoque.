@@ -21,7 +21,7 @@ const Content = ({ title, description, children }: ModalContentProps) => {
 
       <Dialog.Content
         className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-        bg-[#2F2F2F] shadow-xl rounded-xl p-6 w-[90%] max-w-lg outline-none"
+        bg-[#2F2F2F] shadow-xl rounded-xl p-6 w-[90%] max-w-3xl outline-none"
       >
         {title && (
           <Dialog.Title className="text-xl font-semibold text-white mb-1">
@@ -37,14 +37,7 @@ const Content = ({ title, description, children }: ModalContentProps) => {
 
         {children}
 
-        <Dialog.Close asChild>
-          <button
-            className="absolute right-4 top-4 text-gray-500 hover:text-black"
-            aria-label="Fechar"
-          >
-            <X />
-          </button>
-        </Dialog.Close>
+        <Dialog.Close asChild></Dialog.Close>
       </Dialog.Content>
     </Dialog.Portal>
   );

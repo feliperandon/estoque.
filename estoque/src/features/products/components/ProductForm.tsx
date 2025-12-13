@@ -81,74 +81,86 @@ const ProductForm = ({ onSubmitSuccess, initialData }: ProductFormProps) => {
           categories: data.categories || [],
         });
     onSubmitSuccess();
-    form.reset({
-      name: "",
-      quantity: 1,
-      imageUrl: "",
-      description: "",
-      price: 0,
-      timeSpent: 0,
-      categories: [],
-    });
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-      <FormField>
-        <ImageUpload
-          onChangeFile={(file) => {
-            if (!file) {
-              setValue("imageUrl", "");
-              return;
-            }
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="flex flex-col gap-4 py-4"
+    >
+      <div className="grid grid-cols-1 md:grid-cols-[1.6fr_auto_1fr] gap-3">
+        <div className="flex flex-col gap-4">
+          <FormField>
+            <ImageUpload
+              onChangeFile={(file) => {
+                if (!file) {
+                  setValue("imageUrl", "");
+                  return;
+                }
 
-            const url = URL.createObjectURL(file);
-            setValue("imageUrl", url);
-            form.watch("imageUrl");
-          }}
-        />
-      </FormField>
+                const url = URL.createObjectURL(file);
+                setValue("imageUrl", url);
+              }}
+              value={form.watch("imageUrl")}
+            />
+          </FormField>
 
-      <FormField label="Nome" error={form.formState.errors.name?.message}>
-        <Input {...form.register("name")} />
-      </FormField>
+          <FormField label="Título" error={form.formState.errors.name?.message}>
+            <Input {...form.register("name")} />
+          </FormField>
 
-      <FormField
-        label="Descrição"
-        error={form.formState.errors.description?.message}
-      >
-        <Textarea rows={4} {...form.register("description")} />
-      </FormField>
+          <FormField
+            label="Descrição"
+            error={form.formState.errors.description?.message}
+          >
+            <Textarea rows={4} {...form.register("description")} />
+          </FormField>
+        </div>
 
-      <FormField
-        label="Quantidade"
-        error={form.formState.errors.quantity?.message}
-      >
-        <Input type="number" {...form.register("quantity")} />
-      </FormField>
+        <div className="hidden md:flex items-stretch px-1">
+          <div className="w-px bg-white/10 h-full" />
+        </div>
 
-      <FormField label="Categorias">
-        <CategorySelect
-          options={categories}
-          value={form.watch("categories") || []}
-          onChange={(newValue) => {
-            setValue("categories", newValue);
-          }}
-        />
-      </FormField>
+        <div className="flex flex-col gap-4 pr-2">
+          <FormField
+            label="Quantidade"
+            error={form.formState.errors.quantity?.message}
+          >
+            <Input type="number" {...form.register("quantity")} />
+          </FormField>
 
-      <FormField label="Preço" error={form.formState.errors.price?.message}>
-        <Input {...form.register("price")} />
-      </FormField>
+          <FormField label="Categorias">
+            <CategorySelect
+              options={categories}
+              value={form.watch("categories") || []}
+              onChange={(newValue) => {
+                setValue("categories", newValue);
+              }}
+            />
+          </FormField>
+          <FormField label="Materiais">
+            <CategorySelect />
+          </FormField>
 
-      <FormField
-        label="Horas gastas"
-        error={form.formState.errors.timeSpent?.message}
-      >
-        <Input type="number" {...form.register("timeSpent")} />
-      </FormField>
+          <FormField
+            label="Horas gastas"
+            error={form.formState.errors.timeSpent?.message}
+          >
+            <Input type="number" {...form.register("timeSpent")} />
+          </FormField>
 
-      <Button type="submit">Salvar</Button>
+          <FormField label="Preço" error={form.formState.errors.price?.message}>
+            <Input {...form.register("price")} />
+          </FormField>
+        </div>
+      </div>
+      <div className="flex justify-end gap-3 pt-4 border-white/10">
+        <Button type="button" variant="cancel" onClick={onSubmitSuccess}>
+          Cancelar
+        </Button>
+
+        <Button type="submit">Salvar</Button>
+      </div>
     </form>
   );
 };
