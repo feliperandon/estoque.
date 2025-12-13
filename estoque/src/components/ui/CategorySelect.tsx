@@ -43,10 +43,10 @@ const CategorySelect = ({
         <button
           className="
             w-full h-10 px-3 rounded-md 
-            bg-white border border-[#3A3A3A]
-            text-sm text-black 
+            bg-[#3d3d3d]
+            text-sm text-white/70
             flex items-center justify-between
-            focus:outline-none focus:ring-2 focus:ring-blue-500/20
+            cursor-pointer
           "
         >
           {value.length === 0 ? "Selecione categorias" : value.join(", ")}

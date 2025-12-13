@@ -6,4 +6,16 @@
   html {
     font-family: "Kantumruy Pro", sans-serif;
   }
+
+  input[type="number"] {
+    appearance: textfield; /* padrão */
+    -moz-appearance: textfield; /* Firefox */
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    appearance: none; /* padrão */
+    -webkit-appearance: none; /* Chrome / Edge / Safari */
+    margin: 0;
+  }
 }

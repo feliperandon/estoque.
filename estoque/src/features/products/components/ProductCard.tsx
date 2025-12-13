@@ -23,13 +23,13 @@ const ProductCard = ({ product, onEdit, onRemove }: ProductCardProps) => {
         "
       >
         <button
-          className="bg-white/10 hover:bg-white/20 text-white p-3 rounded-lg transition backdrop-blur-sm g"
+          className="bg-white/10 hover:bg-white/20 text-white p-3 rounded-lg transition backdrop-blur-sm cursor-pointer"
           onClick={() => onEdit(product)}
         >
           <Pen />
         </button>
         <button
-          className="bg-white/10 hover:bg-white/20 text-red-700 p-3 rounded-lg transition backdrop-blur-sm"
+          className="bg-white/10 hover:bg-white/20 text-red-700 p-3 rounded-lg transition backdrop-blur-sm cursor-pointer"
           onClick={() => onRemove(product.id)}
         >
           <Trash />
