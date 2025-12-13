@@ -43,7 +43,14 @@ const Products = () => {
         <Searchbar />
         <Modal.Root open={isOpen} onOpenChange={handleModalChange}>
           <Modal.Trigger>
-            <Button>Novo Produto</Button>
+            <Button
+              onClick={() => {
+                setEditingProduct(null);
+                setIsOpen(true);
+              }}
+            >
+              Novo Produto
+            </Button>
           </Modal.Trigger>
 
           <Modal.Content
