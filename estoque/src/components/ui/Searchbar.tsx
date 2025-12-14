@@ -14,7 +14,7 @@ type SearchBarProps = {
 const Searchbar = ({
   value,
   onChange,
-  placeholder = "Buscar produtos...",
+  placeholder,
   className,
 }: SearchBarProps) => {
   return (
