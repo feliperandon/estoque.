@@ -40,7 +40,7 @@ const Products = () => {
       <Header title="Produtos" description="Gerencie seus produtos." />
       <div className="h-px w-full bg-white/20 mb-6"></div>
       <div className="flex justify-between mt-4 mb-4">
-        <Searchbar />
+        <Searchbar placeholder="Buscar produtos..." />
         <Modal.Root open={isOpen} onOpenChange={handleModalChange}>
           <Modal.Trigger>
             <Button
