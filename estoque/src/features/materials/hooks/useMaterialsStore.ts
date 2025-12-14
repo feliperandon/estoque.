@@ -1,0 +1,65 @@
+import { create } from "zustand";
+import type { Material } from "../types/materials";
+
+const initialMaterials: Material[] = [
+  {
+    id: "mat-1",
+    name: "Tecido Algodão",
+    unit: "metro",
+    costPerUnit: 18.5,
+    description: "Tecido de algodão cru para confecção",
+  },
+  {
+    id: "mat-2",
+    name: "Linha Branca",
+    unit: "metro",
+    costPerUnit: 0.12,
+    description: "Linha branca padrão para costura",
+  },
+  {
+    id: "mat-3",
+    name: "Etiqueta Personalizada",
+    unit: "unidade",
+    costPerUnit: 1.2,
+    description: "Etiqueta com logo da marca",
+  },
+  {
+    id: "mat-4",
+    name: "Botão Plástico",
+    unit: "unidade",
+    costPerUnit: 0.35,
+    description: "Botão plástico branco 12mm",
+  },
+  {
+    id: "mat-5",
+    name: "Zíper",
+    unit: "unidade",
+    costPerUnit: 3.9,
+    description: "Zíper reforçado 20cm",
+  },
+];
+
+type MaterialState = {
+  materials: Material[];
+  addMaterial: (item: Material) => void;
+  updateMaterial: (id: string, data: Partial<Material>) => void;
+  removeMaterial: (id: string) => void;
+};
+
+export const useMaterialsStore = create<MaterialState>((set) => {
+  return {
+    materials: initialMaterials,
+    addMaterial: (item) =>
+      set((state) => ({ materials: [...state.materials, item] })),
+    updateMaterial: (id, data) =>
+      set((state) => ({
+        materials: state.materials.map((item) =>
+          item.id === id ? { ...item, ...data } : item
+        ),
+      })),
+    removeMaterial: (id) =>
+      set((state) => ({
+        materials: state.materials.filter((item) => item.id !== id),
+      })),
+  };
+});
