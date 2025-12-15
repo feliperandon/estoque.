@@ -2,12 +2,26 @@ import Header from "@/components/layout/Header";
 
 import { Searchbar, Button } from "@/components/ui";
 import { Modal } from "@/components/ui/Modal";
+import MaterialTable from "@/features/materials/components/MaterialTable";
 
 import { useMaterialsStore } from "@/features/materials/hooks/useMaterialsStore";
+
+import type { Material } from "@/features/materials/types/materials";
+
+import { useState } from "react";
 
 const Materials = () => {
   const materials = useMaterialsStore((state) => state.materials);
 
+  const [editingMaterial, setEditingMaterial] = useState<Material | null>(null);
+
+  const handleEditMaterial = (material: Material) => {
+    setEditingMaterial(material);
+  };
+
+  const handleRemoveMaterial = (materialId: string) => {
+    // Implement removal logic here
+  };
   return (
     <div className="bg-[#474747] min-h-screen">
       <Header title="Materiais" description="Gerencie seus materiais." />
@@ -24,14 +38,11 @@ const Materials = () => {
       </div>
 
       <div>
-        {materials.map((material) => (
-          <div key={material.id}>
-            <h3>{material.name}</h3>
-            <p>{material.description}</p>
-            <p>{material.unit}</p>
-            <p>{material.costPerUnit}</p>
-          </div>
-        ))}
+        <MaterialTable
+          materials={materials}
+          onEdit={handleEditMaterial}
+          onRemove={handleRemoveMaterial}
+        />
       </div>
     </div>
   );
