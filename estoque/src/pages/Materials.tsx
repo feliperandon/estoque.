@@ -2,6 +2,7 @@ import Header from "@/components/layout/Header";
 
 import { Searchbar, Button } from "@/components/ui";
 import { Modal } from "@/components/ui/Modal";
+
 import MaterialTable from "@/features/materials/components/MaterialTable";
 
 import { useMaterialsStore } from "@/features/materials/hooks/useMaterialsStore";
@@ -33,7 +34,7 @@ const Materials = () => {
             <Button>Novo Material</Button>
           </Modal.Trigger>
 
-          <Modal.Content>.</Modal.Content>
+          <Modal.Content></Modal.Content>
         </Modal.Root>
       </div>
 
