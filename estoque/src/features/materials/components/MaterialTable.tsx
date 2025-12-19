@@ -26,8 +26,12 @@ const MaterialTable = ({ materials, onEdit, onRemove }: MaterialTableProps) => {
             <td>{material.costPerUnit}</td>
             <td>
               <div>
-                <Pen />
-                <Trash />
+                <button>
+                  <Pen onClick={() => onEdit(material)} />
+                </button>
+                <button>
+                  <Trash onClick={() => onRemove(material.id)} />
+                </button>
               </div>
             </td>
           </tr>
