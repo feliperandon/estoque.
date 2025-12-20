@@ -16,13 +16,14 @@ import {
 
 import type { Product } from "../types/product";
 import { useEffect } from "react";
+import { moneySchema } from "@/lib/moneySchema";
 
 const productSchema = z.object({
   name: z.string().min(1, "O nome é obrigatório"),
   quantity: z.coerce.number().min(1, "A quantidade mínima é 1"),
   description: z.string().optional(),
   imageUrl: z.string().optional(),
-  price: z.coerce.number().min(0).optional(),
+  price: moneySchema,
   timeSpent: z.coerce.number().min(0).optional(),
   categories: z.array(z.string()).optional(),
 });
@@ -150,7 +151,7 @@ const ProductForm = ({ onSubmitSuccess, initialData }: ProductFormProps) => {
           </FormField>
 
           <FormField label="Preço" error={form.formState.errors.price?.message}>
-            <Input {...form.register("price")} />
+            <Input type="text" {...form.register("price")} />
           </FormField>
         </div>
       </div>

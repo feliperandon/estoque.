@@ -1,6 +1,8 @@
 import { Pen, Trash } from "lucide-react";
 import type { Product } from "../types/product";
 
+import { formatCurrency } from "@/lib/formatCurrency";
+
 type ProductCardProps = {
   product: Product;
   onEdit: (product: Product) => void;
@@ -89,9 +91,9 @@ const ProductCard = ({ product, onEdit, onRemove }: ProductCardProps) => {
         </div>
 
         <div className="flex flex-col text-right gap-2">
-          <span>Custo: R$ {product.price ?? 0}</span>
+          <span>Custo: {formatCurrency(product.price ?? 0)}</span>
           <span className="text-white font-bold text-2xl">
-            R$ {product.price ?? 0}
+            {formatCurrency(product.price ?? 0)}
           </span>
         </div>
       </div>
