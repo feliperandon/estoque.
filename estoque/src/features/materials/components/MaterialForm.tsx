@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { moneySchema } from "@/lib/moneySchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -13,7 +14,7 @@ import { Button, FormField, Input, Textarea } from "@/components/ui";
 const materialSchema = z.object({
   name: z.string().min(1, "O nome é obrigatório"),
   unit: z.string().min(1, "A unidade é obrigatória"),
-  costPerUnit: z.coerce.number().min(0, "O valor unitário mínimo é 0"),
+  costPerUnit: moneySchema,
   description: z.string().optional(),
 });
 
@@ -78,7 +79,7 @@ const MaterialForm = ({ onSubmitSuccess, initialData }: MaterialFormProps) => {
           label="Custo por unidade"
           error={form.formState.errors.costPerUnit?.message}
         >
-          <Input type="number" {...form.register("costPerUnit")} />
+          <Input type="text" {...form.register("costPerUnit")} />
         </FormField>
       </div>
       <div className="flex flex-col gap-4 pr-2">

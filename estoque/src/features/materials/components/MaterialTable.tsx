@@ -1,6 +1,8 @@
 import { Pen, Trash } from "lucide-react";
 import type { Material } from "../types/materials";
 
+import { formatCurrency } from "@/lib/formatCurrency";
+
 type MaterialTableProps = {
   materials: Material[];
   onEdit: (material: Material) => void;
@@ -23,7 +25,7 @@ const MaterialTable = ({ materials, onEdit, onRemove }: MaterialTableProps) => {
           <tr key={material.id}>
             <td>{material.name}</td>
             <td>{material.unit}</td>
-            <td>{material.costPerUnit}</td>
+            <td>{formatCurrency(material.costPerUnit)}</td>
             <td>
               <div>
                 <button>
