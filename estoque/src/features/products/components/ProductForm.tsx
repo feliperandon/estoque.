@@ -33,33 +33,25 @@ type ProductFormProps = {
   initialData?: Product | null;
 };
 
+const defaultValues: z.infer<typeof productSchema> = {
+  name: "",
+  quantity: 1,
+  imageUrl: "",
+  description: "",
+  price: 0,
+  timeSpent: 0,
+  categories: [],
+};
+
 const ProductForm = ({ onSubmitSuccess, initialData }: ProductFormProps) => {
   const form = useForm({
     resolver: zodResolver(productSchema),
-    defaultValues: {
-      name: "",
-      quantity: 1,
-      imageUrl: "",
-      description: "",
-      price: 0,
-      timeSpent: 0,
-      categories: [],
-    },
+    defaultValues,
   });
 
   useEffect(() => {
-    initialData
-      ? form.reset(initialData)
-      : form.reset({
-          name: "",
-          quantity: 1,
-          imageUrl: "",
-          description: "",
-          price: 0,
-          timeSpent: 0,
-          categories: [],
-        });
-  }, [initialData]);
+    initialData ? form.reset(initialData) : form.reset(defaultValues);
+  }, [initialData, form]);
 
   const { setValue } = form;
 
