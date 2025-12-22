@@ -23,27 +23,22 @@ type MaterialFormProps = {
   initialData?: Material | null;
 };
 
+const defaultValues: z.infer<typeof materialSchema> = {
+  name: "",
+  unit: "",
+  costPerUnit: 0,
+  description: "",
+};
+
 const MaterialForm = ({ onSubmitSuccess, initialData }: MaterialFormProps) => {
   const form = useForm({
     resolver: zodResolver(materialSchema),
-    defaultValues: {
-      name: "",
-      unit: "",
-      costPerUnit: 0,
-      description: "",
-    },
+    defaultValues,
   });
 
   useEffect(() => {
-    initialData
-      ? form.reset(initialData)
-      : form.reset({
-          name: "",
-          unit: "",
-          costPerUnit: 0,
-          description: "",
-        });
-  }, [initialData]);
+    initialData ? form.reset(initialData) : form.reset(defaultValues);
+  }, [initialData, form]);
 
   const addMaterial = useMaterialsStore((state) => state.addMaterial);
   const updateMaterial = useMaterialsStore((state) => state.updateMaterial);
