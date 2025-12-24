@@ -11,9 +11,11 @@ import { useMaterialsStore } from "../hooks/useMaterialsStore";
 
 import { Button, FormField, Input, Textarea } from "@/components/ui";
 
+import { useMaterialCategoryStore } from "../hooks/useMaterialCategoryStore";
+
 const materialSchema = z.object({
   name: z.string().min(1, "O nome é obrigatório"),
-  unit: z.string().min(1, "A unidade é obrigatória"),
+  categoryId: z.string().min(1),
   costPerUnit: moneySchema,
   description: z.string().optional(),
 });
@@ -25,12 +27,16 @@ type MaterialFormProps = {
 
 const defaultValues: z.infer<typeof materialSchema> = {
   name: "",
-  unit: "",
+  categoryId: "",
   costPerUnit: 0,
   description: "",
 };
 
 const MaterialForm = ({ onSubmitSuccess, initialData }: MaterialFormProps) => {
+  const categories = useMaterialCategoryStore(
+    (state) => state.materialCategories
+  );
+
   const form = useForm({
     resolver: zodResolver(materialSchema),
     defaultValues,
@@ -44,15 +50,16 @@ const MaterialForm = ({ onSubmitSuccess, initialData }: MaterialFormProps) => {
   const updateMaterial = useMaterialsStore((state) => state.updateMaterial);
 
   const onSubmit = (data: z.infer<typeof materialSchema>) => {
-    initialData
-      ? updateMaterial(initialData.id, data)
-      : addMaterial({
-          id: crypto.randomUUID(),
-          name: data.name,
-          unit: data.unit,
-          costPerUnit: data.costPerUnit,
-          description: data.description,
-        });
+    const material: Material = {
+      id: initialData?.id ?? crypto.randomUUID(),
+      name: data.name,
+      categoryId: data.categoryId,
+      costPerUnit: data.costPerUnit,
+      description: data.description,
+    };
+
+    initialData ? updateMaterial(material.id, material) : addMaterial(material);
+
     onSubmitSuccess();
   };
 
@@ -65,8 +72,22 @@ const MaterialForm = ({ onSubmitSuccess, initialData }: MaterialFormProps) => {
       </div>
 
       <div className="flex flex-col gap-4 pr-2">
-        <FormField label="Unidade" error={form.formState.errors.unit?.message}>
-          <Input type="text" {...form.register("unit")} />
+        <FormField
+          label="Categoria"
+          error={form.formState.errors.categoryId?.message}
+        >
+          <select
+            id="categoryId"
+            {...form.register("categoryId")}
+            className="h-10 rounded-md bg-[#3d3d3d] px-3 text-white"
+          >
+            <option value="">Selecione uma categoria</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
         </FormField>
       </div>
       <div className="flex flex-col gap-4 pr-2">
