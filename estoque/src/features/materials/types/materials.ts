@@ -1,7 +1,7 @@
 export type Material = {
   id: string;
   name: string;
-  unit: string;
+  categoryId: string;
   costPerUnit: number;
   description?: string;
 };

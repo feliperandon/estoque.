@@ -5,35 +5,38 @@ const initialMaterials: Material[] = [
   {
     id: "mat-1",
     name: "Tecido Algodão",
-    unit: "metro",
+    categoryId: "cat-1",
     costPerUnit: 18.5,
     description: "Tecido de algodão cru para confecção",
   },
   {
     id: "mat-2",
     name: "Linha Branca",
-    unit: "metro",
+    categoryId: "cat-2",
     costPerUnit: 0.12,
     description: "Linha branca padrão para costura",
   },
   {
     id: "mat-3",
     name: "Etiqueta Personalizada",
-    unit: "unidade",
+
+    categoryId: "cat-3",
     costPerUnit: 1.2,
     description: "Etiqueta com logo da marca",
   },
   {
     id: "mat-4",
     name: "Botão Plástico",
-    unit: "unidade",
+
+    categoryId: "cat-4",
     costPerUnit: 0.35,
     description: "Botão plástico branco 12mm",
   },
   {
     id: "mat-5",
     name: "Zíper",
-    unit: "unidade",
+
+    categoryId: "cat-5",
     costPerUnit: 3.9,
     description: "Zíper reforçado 20cm",
   },

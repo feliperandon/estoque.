@@ -2,14 +2,21 @@ import { Pen, Trash } from "lucide-react";
 import type { Material } from "../types/materials";
 
 import { formatCurrency } from "@/lib/formatCurrency";
+import type { MaterialCategory } from "../types/materialCategory";
 
 type MaterialTableProps = {
   materials: Material[];
   onEdit: (material: Material) => void;
   onRemove: (materialId: string) => void;
+  categories: MaterialCategory[];
 };
 
-const MaterialTable = ({ materials, onEdit, onRemove }: MaterialTableProps) => {
+const MaterialTable = ({
+  materials,
+  onEdit,
+  onRemove,
+  categories,
+}: MaterialTableProps) => {
   return (
     <table>
       <thead>
@@ -21,23 +28,29 @@ const MaterialTable = ({ materials, onEdit, onRemove }: MaterialTableProps) => {
         </tr>
       </thead>
       <tbody>
-        {materials.map((material) => (
-          <tr key={material.id}>
-            <td>{material.name}</td>
-            <td>{material.unit}</td>
-            <td>{formatCurrency(material.costPerUnit)}</td>
-            <td>
-              <div>
-                <button>
-                  <Pen onClick={() => onEdit(material)} />
-                </button>
-                <button>
-                  <Trash onClick={() => onRemove(material.id)} />
-                </button>
-              </div>
-            </td>
-          </tr>
-        ))}
+        {materials.map((material) => {
+          const category = categories?.find(
+            (cat) => cat.id === material.categoryId
+          );
+
+          return (
+            <tr key={material.id}>
+              <td>{material.name}</td>
+              <td>{category?.unitType}</td>
+              <td>{formatCurrency(material.costPerUnit)}</td>
+              <td>
+                <div>
+                  <button>
+                    <Pen onClick={() => onEdit(material)} />
+                  </button>
+                  <button>
+                    <Trash onClick={() => onRemove(material.id)} />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
