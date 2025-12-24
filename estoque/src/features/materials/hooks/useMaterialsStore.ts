@@ -6,6 +6,7 @@ const initialMaterials: Material[] = [
     id: "mat-1",
     name: "Tecido Algodão",
     categoryId: "cat-1",
+    quantity: 123,
     costPerUnit: 18.5,
     description: "Tecido de algodão cru para confecção",
   },
@@ -13,30 +14,31 @@ const initialMaterials: Material[] = [
     id: "mat-2",
     name: "Linha Branca",
     categoryId: "cat-2",
+    quantity: 121,
     costPerUnit: 0.12,
     description: "Linha branca padrão para costura",
   },
   {
     id: "mat-3",
     name: "Etiqueta Personalizada",
-
     categoryId: "cat-3",
+    quantity: 12,
     costPerUnit: 1.2,
     description: "Etiqueta com logo da marca",
   },
   {
     id: "mat-4",
     name: "Botão Plástico",
-
     categoryId: "cat-4",
+    quantity: 1,
     costPerUnit: 0.35,
     description: "Botão plástico branco 12mm",
   },
   {
     id: "mat-5",
     name: "Zíper",
-
     categoryId: "cat-5",
+    quantity: 10,
     costPerUnit: 3.9,
     description: "Zíper reforçado 20cm",
   },

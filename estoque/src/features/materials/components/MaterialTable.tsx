@@ -4,6 +4,8 @@ import type { Material } from "../types/materials";
 import { formatCurrency } from "@/lib/formatCurrency";
 import type { MaterialCategory } from "../types/materialCategory";
 
+import { UNIT_TYPE_CONFIG } from "../config/unitTypeConfig";
+
 type MaterialTableProps = {
   materials: Material[];
   onEdit: (material: Material) => void;
@@ -22,8 +24,10 @@ const MaterialTable = ({
       <thead>
         <tr>
           <th scope="col">Material</th>
-          <th scope="col">Unidade</th>
-          <th scope="col">Valor unitário</th>
+          <th scope="col">Categoria</th>
+          <th scope="col">Qtd</th>
+          <th scope="col">Valor Unit.</th>
+          <th scope="col">Total</th>
           <th scope="col">Ações</th>
         </tr>
       </thead>
@@ -32,12 +36,22 @@ const MaterialTable = ({
           const category = categories?.find(
             (cat) => cat.id === material.categoryId
           );
+          const suffix = category
+            ? UNIT_TYPE_CONFIG[category.unitType].suffix
+            : "";
 
           return (
             <tr key={material.id}>
               <td>{material.name}</td>
-              <td>{category?.unitType}</td>
+              <td>{category?.name}</td>
+              <td>
+                {material.quantity} {suffix}
+              </td>
+
               <td>{formatCurrency(material.costPerUnit)}</td>
+              <td>
+                {formatCurrency(material.quantity * material.costPerUnit)}
+              </td>
               <td>
                 <div>
                   <button>
