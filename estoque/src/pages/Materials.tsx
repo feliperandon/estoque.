@@ -6,6 +6,7 @@ import { Modal } from "@/components/ui/Modal";
 import MaterialForm from "@/features/materials/components/MaterialForm";
 import MaterialTable from "@/features/materials/components/MaterialTable";
 
+import { useMaterialCategoryStore } from "@/features/materials/hooks/useMaterialCategoryStore";
 import { useMaterialsStore } from "@/features/materials/hooks/useMaterialsStore";
 
 import type { Material } from "@/features/materials/types/materials";
@@ -15,6 +16,10 @@ import { useState } from "react";
 const Materials = () => {
   const materials = useMaterialsStore((state) => state.materials);
   const removeMaterial = useMaterialsStore((state) => state.removeMaterial);
+
+  const categories = useMaterialCategoryStore(
+    (state) => state.materialCategories
+  );
 
   const [editingMaterial, setEditingMaterial] = useState<Material | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -53,6 +58,7 @@ const Materials = () => {
           materials={materials}
           onEdit={handleEditMaterial}
           onRemove={handleRemoveMaterial}
+          categories={categories}
         />
       </div>
       <Modal.Root open={isOpen} onOpenChange={handleModalChange}>
