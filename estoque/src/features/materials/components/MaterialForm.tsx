@@ -12,30 +12,56 @@ import { useMaterialsStore } from "../hooks/useMaterialsStore";
 import { Button, FormField, Input, Textarea } from "@/components/ui";
 
 import { useMaterialCategoryStore } from "../hooks/useMaterialCategoryStore";
-
-const materialSchema = z.object({
-  name: z.string().min(1, "O nome é obrigatório"),
-  categoryId: z.string().min(1),
-  costPerUnit: moneySchema,
-  description: z.string().optional(),
-});
+import { UNIT_TYPE_CONFIG } from "../config/unitTypeConfig";
 
 type MaterialFormProps = {
   onSubmitSuccess: () => void;
   initialData?: Material | null;
 };
 
-const defaultValues: z.infer<typeof materialSchema> = {
-  name: "",
-  categoryId: "",
-  costPerUnit: 0,
-  description: "",
-};
-
 const MaterialForm = ({ onSubmitSuccess, initialData }: MaterialFormProps) => {
   const categories = useMaterialCategoryStore(
     (state) => state.materialCategories
   );
+
+  const materialSchema = z
+    .object({
+      name: z.string().min(1, "O nome é obrigatório"),
+      categoryId: z.string().min(1, "Selecione uma categoria"),
+      costPerUnit: moneySchema,
+      quantity: z.coerce.number(),
+      description: z.string().optional(),
+    })
+    .refine(
+      (data) => {
+        const category = categories.find((cat) => cat.id === data.categoryId);
+
+        if (!category) return true;
+
+        const unitType = category.unitType;
+
+        const config = UNIT_TYPE_CONFIG[unitType];
+
+        if (!config.allowsDecimal) {
+          return Number.isInteger(data.quantity);
+        }
+
+        return true;
+      },
+      {
+        message:
+          "A quantidade precisa ser um número inteiro para essa categoria",
+        path: ["quantity"],
+      }
+    );
+
+  const defaultValues: z.infer<typeof materialSchema> = {
+    name: "",
+    categoryId: "",
+    costPerUnit: 0,
+    quantity: 0,
+    description: "",
+  };
 
   const form = useForm({
     resolver: zodResolver(materialSchema),
@@ -55,6 +81,7 @@ const MaterialForm = ({ onSubmitSuccess, initialData }: MaterialFormProps) => {
       name: data.name,
       categoryId: data.categoryId,
       costPerUnit: data.costPerUnit,
+      quantity: data.quantity,
       description: data.description,
     };
 
@@ -96,6 +123,14 @@ const MaterialForm = ({ onSubmitSuccess, initialData }: MaterialFormProps) => {
           error={form.formState.errors.costPerUnit?.message}
         >
           <Input type="text" {...form.register("costPerUnit")} />
+        </FormField>
+      </div>
+      <div>
+        <FormField
+          label="Quantidade"
+          error={form.formState.errors.quantity?.message}
+        >
+          <Input type="number" step="0.01" {...form.register("quantity")} />
         </FormField>
       </div>
       <div className="flex flex-col gap-4 pr-2">
