@@ -6,6 +6,8 @@ import type { MaterialCategory } from "../types/materialCategory";
 
 import { UNIT_TYPE_CONFIG } from "../config/unitTypeConfig";
 
+import Badge from "@/components/ui/Badge";
+
 type MaterialTableProps = {
   materials: Material[];
   onEdit: (material: Material) => void;
@@ -40,10 +42,16 @@ const MaterialTable = ({
             ? UNIT_TYPE_CONFIG[category.unitType].suffix
             : "";
 
+          const color = category
+            ? UNIT_TYPE_CONFIG[category.unitType].color
+            : "";
+
           return (
             <tr key={material.id}>
               <td>{material.name}</td>
-              <td>{category?.name}</td>
+              <td>
+                <Badge color={color}>{category?.name}</Badge>
+              </td>
               <td>
                 {material.quantity} {suffix}
               </td>
