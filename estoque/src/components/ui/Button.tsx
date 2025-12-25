@@ -1,6 +1,6 @@
 import { cn } from "@/lib/cn";
 
-type Variant = "primary" | "cancel" | "ghost";
+type Variant = "primary" | "cancel" | "ghost" | "outline";
 
 type Size = "sm" | "md" | "lg";
 
@@ -23,7 +23,9 @@ const Button = ({
   const variantClasses: Record<Variant, string> = {
     primary: "bg-blue-600 text-white hover:bg-blue-700",
     cancel: "bg-[#3d3d3d] text-white hover:bg-[#3d3d3d]/60",
-    ghost: "text-gray-800 hover:bg-gray-100",
+    ghost: "bg-transparent text-white hover:bg-white/10",
+    outline:
+      "bg-transparent text-white border border-white/20 hover:bg-white/10",
   };
 
   const sizeClasses: Record<Size, string> = {
