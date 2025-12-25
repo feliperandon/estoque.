@@ -8,3 +8,4 @@ export { default as Searchbar } from "./Searchbar";
 export { default as Select } from "./Select";
 export { default as Textarea } from "./Textarea";
 export { default as CategorySelect } from "./CategorySelect";
+export { default as ColorPicker } from "./ColorPicker";
