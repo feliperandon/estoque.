@@ -57,9 +57,7 @@ const MaterialTable = ({
             ? UNIT_TYPE_CONFIG[category.unitType].suffix
             : "";
 
-          const color = category
-            ? UNIT_TYPE_CONFIG[category.unitType].color
-            : "";
+          const color = category ? category.color : "";
 
           return (
             <tr
