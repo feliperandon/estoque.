@@ -1,8 +1,9 @@
 import { Pen, Trash } from "lucide-react";
+
 import type { Material } from "../types/materials";
+import type { MaterialCategory } from "../types/materialCategory";
 
 import { formatCurrency } from "@/lib/formatCurrency";
-import type { MaterialCategory } from "../types/materialCategory";
 
 import { UNIT_TYPE_CONFIG } from "../config/unitTypeConfig";
 
@@ -21,16 +22,30 @@ const MaterialTable = ({
   onRemove,
   categories,
 }: MaterialTableProps) => {
+  const thClass = "py-5 px-6 text-white text-md font-medium";
+  const tdClass = "py-4 px-6 text-gray-200 text-sm";
   return (
-    <table>
-      <thead>
+    <table className="w-full bg-[#3a3a3a] rounded-2xl text-left table-fixed">
+      <thead className="">
         <tr>
-          <th scope="col">Material</th>
-          <th scope="col">Categoria</th>
-          <th scope="col">Qtd</th>
-          <th scope="col">Valor Unit.</th>
-          <th scope="col">Total</th>
-          <th scope="col">Ações</th>
+          <th scope="col" className={`${thClass} w-[25%]`}>
+            Material
+          </th>
+          <th scope="col" className={`${thClass} w-[15%]`}>
+            Categoria
+          </th>
+          <th scope="col" className={`${thClass} w-[10%]`}>
+            Qtd
+          </th>
+          <th scope="col" className={`${thClass} w-[15%]`}>
+            Valor Unit.
+          </th>
+          <th scope="col" className={`${thClass} w-[15%]`}>
+            Total
+          </th>
+          <th scope="col" className={`${thClass} w-[10%]`}>
+            Ações
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -47,26 +62,37 @@ const MaterialTable = ({
             : "";
 
           return (
-            <tr key={material.id}>
-              <td>{material.name}</td>
-              <td>
+            <tr
+              key={material.id}
+              className="border-t border-white/10 hover:bg-white/5"
+            >
+              <td className={tdClass}>{material.name}</td>
+              <td className={tdClass}>
                 <Badge color={color}>{category?.name}</Badge>
               </td>
-              <td>
+              <td className={tdClass}>
                 {material.quantity} {suffix}
               </td>
 
-              <td>{formatCurrency(material.costPerUnit)}</td>
-              <td>
+              <td className={tdClass}>
+                {formatCurrency(material.costPerUnit)}
+              </td>
+              <td className={tdClass}>
                 {formatCurrency(material.quantity * material.costPerUnit)}
               </td>
-              <td>
-                <div>
-                  <button>
-                    <Pen onClick={() => onEdit(material)} />
+              <td className={tdClass}>
+                <div className="flex gap-2">
+                  <button onClick={() => onEdit(material)}>
+                    <Pen
+                      size={18}
+                      className="text-gray-400 hover:text-white cursor-pointer"
+                    />
                   </button>
-                  <button>
-                    <Trash onClick={() => onRemove(material.id)} />
+                  <button onClick={() => onRemove(material.id)}>
+                    <Trash
+                      size={18}
+                      className="text-red-700 hover:text-red-400 cursor-pointer"
+                    />
                   </button>
                 </div>
               </td>
