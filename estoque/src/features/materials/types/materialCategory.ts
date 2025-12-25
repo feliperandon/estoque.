@@ -4,4 +4,5 @@ export type MaterialCategory = {
   id: string;
   name: string;
   unitType: UnitType;
+  color: string;
 };
