@@ -10,6 +10,6 @@ export type Product = {
 
   materials?: {
     materialId: string;
-    quantity: number;
+    quantityUsed: number;
   }[];
 };

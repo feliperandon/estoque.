@@ -13,10 +13,15 @@ import {
   ImageUpload,
   CategorySelect,
 } from "@/components/ui";
+import { Drawer } from "@/components/ui/Drawer";
+
+import MaterialsDrawer from "./MaterialsDrawer";
 
 import type { Product } from "../types/product";
-import { useEffect } from "react";
+
 import { moneySchema } from "@/lib/moneySchema";
+
+import { useEffect } from "react";
 
 const productSchema = z.object({
   name: z.string().min(1, "O nome é obrigatório"),
@@ -26,6 +31,9 @@ const productSchema = z.object({
   price: moneySchema,
   timeSpent: z.coerce.number().min(0).optional(),
   categories: z.array(z.string()).optional(),
+  materials: z
+    .array(z.object({ materialId: z.string(), quantityUsed: z.number() }))
+    .optional(),
 });
 
 type ProductFormProps = {
@@ -41,6 +49,7 @@ const defaultValues: z.infer<typeof productSchema> = {
   price: 0,
   timeSpent: 0,
   categories: [],
+  materials: [],
 };
 
 const ProductForm = ({ onSubmitSuccess, initialData }: ProductFormProps) => {
@@ -50,7 +59,16 @@ const ProductForm = ({ onSubmitSuccess, initialData }: ProductFormProps) => {
   });
 
   useEffect(() => {
-    initialData ? form.reset(initialData) : form.reset(defaultValues);
+    if (!initialData) {
+      form.reset(defaultValues);
+      return;
+    }
+
+    form.reset({
+      ...initialData,
+      categories: initialData.categories ?? [],
+      materials: initialData.materials ?? [],
+    });
   }, [initialData, form]);
 
   const { setValue } = form;
@@ -72,89 +90,108 @@ const ProductForm = ({ onSubmitSuccess, initialData }: ProductFormProps) => {
           timeSpent: data.timeSpent,
           description: data.description,
           categories: data.categories || [],
+          materials: data.materials || [],
         });
     onSubmitSuccess();
   };
 
   return (
-    <form
-      onSubmit={form.handleSubmit(onSubmit)}
-      className="flex flex-col gap-4 py-4"
-    >
-      <div className="grid grid-cols-1 md:grid-cols-[1.6fr_auto_1fr] gap-3">
-        <div className="flex flex-col gap-4">
-          <FormField>
-            <ImageUpload
-              onChangeFile={(file) => {
-                if (!file) {
-                  setValue("imageUrl", "");
-                  return;
-                }
+    <>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-4 py-4"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-[1.6fr_auto_1fr] gap-3">
+          <div className="flex flex-col gap-4">
+            <FormField>
+              <ImageUpload
+                onChangeFile={(file) => {
+                  if (!file) {
+                    setValue("imageUrl", "");
+                    return;
+                  }
 
-                const url = URL.createObjectURL(file);
-                setValue("imageUrl", url);
-              }}
-              value={form.watch("imageUrl")}
-            />
-          </FormField>
+                  const url = URL.createObjectURL(file);
+                  setValue("imageUrl", url);
+                }}
+                value={form.watch("imageUrl")}
+              />
+            </FormField>
 
-          <FormField label="Título" error={form.formState.errors.name?.message}>
-            <Input {...form.register("name")} />
-          </FormField>
+            <FormField
+              label="Título"
+              error={form.formState.errors.name?.message}
+            >
+              <Input {...form.register("name")} />
+            </FormField>
 
-          <FormField
-            label="Descrição"
-            error={form.formState.errors.description?.message}
-          >
-            <Textarea rows={4} {...form.register("description")} />
-          </FormField>
+            <FormField
+              label="Descrição"
+              error={form.formState.errors.description?.message}
+            >
+              <Textarea rows={4} {...form.register("description")} />
+            </FormField>
+          </div>
+
+          <div className="hidden md:flex items-stretch px-1">
+            <div className="w-px bg-white/10 h-full" />
+          </div>
+
+          <div className="flex flex-col gap-4 pr-2">
+            <FormField
+              label="Quantidade"
+              error={form.formState.errors.quantity?.message}
+            >
+              <Input type="number" {...form.register("quantity")} />
+            </FormField>
+
+            <FormField label="Categorias">
+              <CategorySelect
+                options={categories}
+                value={form.watch("categories") || []}
+                onChange={(newValue) => {
+                  setValue("categories", newValue);
+                }}
+              />
+            </FormField>
+            <FormField label="Materiais">
+              <Drawer.Root>
+                <Drawer.Trigger asChild>
+                  <button> + Gerenciar Materiais</button>
+                </Drawer.Trigger>
+                <Drawer.Content>
+                  <MaterialsDrawer
+                    value={form.watch("materials") || []}
+                    onChange={(newValue) => setValue("materials", newValue)}
+                  />
+                </Drawer.Content>
+              </Drawer.Root>
+            </FormField>
+
+            <FormField
+              label="Horas gastas"
+              error={form.formState.errors.timeSpent?.message}
+            >
+              <Input type="number" {...form.register("timeSpent")} />
+            </FormField>
+
+            <FormField
+              label="Preço"
+              error={form.formState.errors.price?.message}
+            >
+              <Input type="text" {...form.register("price")} />
+            </FormField>
+          </div>
         </div>
+        <div className="flex justify-end gap-3 pt-4 border-white/10">
+          <Button type="button" variant="cancel" onClick={onSubmitSuccess}>
+            Cancelar
+          </Button>
 
-        <div className="hidden md:flex items-stretch px-1">
-          <div className="w-px bg-white/10 h-full" />
+          <Button type="submit">Salvar</Button>
         </div>
-
-        <div className="flex flex-col gap-4 pr-2">
-          <FormField
-            label="Quantidade"
-            error={form.formState.errors.quantity?.message}
-          >
-            <Input type="number" {...form.register("quantity")} />
-          </FormField>
-
-          <FormField label="Categorias">
-            <CategorySelect
-              options={categories}
-              value={form.watch("categories") || []}
-              onChange={(newValue) => {
-                setValue("categories", newValue);
-              }}
-            />
-          </FormField>
-          <FormField label="Materiais">
-            <CategorySelect />
-          </FormField>
-
-          <FormField
-            label="Horas gastas"
-            error={form.formState.errors.timeSpent?.message}
-          >
-            <Input type="number" {...form.register("timeSpent")} />
-          </FormField>
-
-          <FormField label="Preço" error={form.formState.errors.price?.message}>
-            <Input type="text" {...form.register("price")} />
-          </FormField>
-        </div>
-      </div>
-      <div className="flex justify-end gap-3 pt-4 border-white/10">
-        <Button type="button" variant="cancel" onClick={onSubmitSuccess}>
-          Cancelar
-        </Button>
-
-        <Button type="submit">Salvar</Button>
-      </div>
-    </form>
+      </form>
+    </>
   );
 };
 
