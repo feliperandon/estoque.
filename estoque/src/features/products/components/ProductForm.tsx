@@ -5,15 +5,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useProductsStore } from "../hooks/useProductsStore";
 import { useCategoriesStore } from "../hooks/useCategoriesStore";
 
-import {
-  Input,
-  Button,
-  FormField,
-  Textarea,
-  ImageUpload,
-  CategorySelect,
-} from "@/components/ui";
+import { Input, Button, FormField, Textarea } from "@/components/ui";
 import { Drawer } from "@/components/ui/Drawer";
+
+import ImageUpload from "./ImageUpload";
+import CategorySelect from "./CategorySelect";
 
 import MaterialsDrawer from "./MaterialsDrawer";
 

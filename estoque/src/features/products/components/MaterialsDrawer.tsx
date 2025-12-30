@@ -32,11 +32,18 @@ const MaterialsDrawer = ({ value, onChange }: MateriaisDrawerProps) => {
 
   return (
     <div>
-      <h2 className="text-white text-lg font-medium mb-4">
-        Selecionar Materiais
-      </h2>
+      <div className="mb-6">
+        <h2 className="text-white text-xl font-semibold">
+          Selecionar Materiais
+        </h2>
+        <p className="text-gray-400 text-sm mt-1">
+          Adicione os materiais utilizados neste produto.
+        </p>
+      </div>
       <div>
-        <p className="text-gray-400 text-mb mb-2">Materiais Selecionados</p>
+        <p className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-3">
+          Materiais Selecionados ({value.length})
+        </p>
 
         {value.map((item) => {
           const material = materials.find((m) => m.id === item.materialId);
@@ -53,11 +60,17 @@ const MaterialsDrawer = ({ value, onChange }: MateriaisDrawerProps) => {
           return (
             <div
               key={item.materialId}
-              className="bg-[#3d3d3d] rounded-lg p-3 mb-2"
+              className="bg-[#3d3d3d] rounded-xl p-4 mb-3 border border-white/5"
             >
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-white">{material.name}</p>
+              <div className="flex justify-between items-start mb-2">
+                <div className="flex items-center gap-2">
+                  <span
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: category?.color }}
+                  />
+                  <span className="text-white font-medium">
+                    {material.name}
+                  </span>
                   <p className="text-gray-400 text-sm">
                     {formatCurrency(material.costPerUnit)} / {config?.suffix}
                     <p className="text-gray-400 text-xs">
@@ -65,44 +78,44 @@ const MaterialsDrawer = ({ value, onChange }: MateriaisDrawerProps) => {
                     </p>
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="number"
-                    value={item.quantityUsed}
-                    max={material.quantity}
-                    min={0}
-                    className={`w-16 h-8 px-2 rounded text-white text-center ${
-                      isOverLimit
-                        ? "bg-red-900 border border-red-500"
-                        : "bg-[#2f2f2f]"
-                    }`}
-                    onChange={(e) => {
-                      const newQuantity = Number(e.target.value);
-                      onChange(
-                        value.map((v) =>
-                          v.materialId === item.materialId
-                            ? { ...v, quantityUsed: newQuantity }
-                            : v
-                        )
-                      );
-                    }}
-                  />
-                  {isOverLimit && (
-                    <span className="text-red-500 text-xs">
-                      Estoque insuficiente
-                    </span>
-                  )}
-                  <span className="text-white">{formatCurrency(cost)}</span>
-                  <button
-                    onClick={() => {
-                      onChange(
-                        value.filter((v) => v.materialId !== item.materialId)
-                      );
-                    }}
-                  >
-                    <Trash size={16} className="text-red-500" />
-                  </button>
-                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  value={item.quantityUsed}
+                  max={material.quantity}
+                  min={0}
+                  className={`w-16 h-8 px-2 rounded text-white text-center ${
+                    isOverLimit
+                      ? "bg-red-900 border border-red-500"
+                      : "bg-[#2f2f2f]"
+                  }`}
+                  onChange={(e) => {
+                    const newQuantity = Number(e.target.value);
+                    onChange(
+                      value.map((v) =>
+                        v.materialId === item.materialId
+                          ? { ...v, quantityUsed: newQuantity }
+                          : v
+                      )
+                    );
+                  }}
+                />
+                {isOverLimit && (
+                  <span className="text-red-500 text-xs">
+                    Estoque insuficiente
+                  </span>
+                )}
+                <span className="text-white">{formatCurrency(cost)}</span>
+                <button
+                  onClick={() => {
+                    onChange(
+                      value.filter((v) => v.materialId !== item.materialId)
+                    );
+                  }}
+                >
+                  <Trash size={16} className="text-red-500" />
+                </button>
               </div>
             </div>
           );
@@ -150,7 +163,6 @@ const MaterialsDrawer = ({ value, onChange }: MateriaisDrawerProps) => {
                     ]);
                   }}
                 >
-                  {" "}
                   + Adicionar
                 </button>
               </div>
