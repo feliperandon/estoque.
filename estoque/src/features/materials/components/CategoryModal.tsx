@@ -1,5 +1,8 @@
 import { Modal } from "@/components/ui/Modal";
-import { Button, ColorPicker } from "@/components/ui";
+import { Button } from "@/components/ui";
+
+import ColorPicker from "./ColorPicker";
+
 import { useMaterialCategoryStore } from "../hooks/useMaterialCategoryStore";
 
 import { Pen, Trash } from "lucide-react";
