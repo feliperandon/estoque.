@@ -1,6 +1,5 @@
+import { Input } from "@/components/ui";
 import { useEffect, useRef, useState } from "react";
-
-import Input from "./Input";
 
 type ImageUploadProps = {
   onChangeFile?: (file: File | null) => void;

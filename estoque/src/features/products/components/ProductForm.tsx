@@ -18,6 +18,7 @@ import type { Product } from "../types/product";
 import { moneySchema } from "@/lib/moneySchema";
 
 import { useEffect } from "react";
+import { Package } from "lucide-react";
 
 const productSchema = z.object({
   name: z.string().min(1, "O nome é obrigatório"),
@@ -153,7 +154,10 @@ const ProductForm = ({ onSubmitSuccess, initialData }: ProductFormProps) => {
             <FormField label="Materiais">
               <Drawer.Root>
                 <Drawer.Trigger asChild>
-                  <button> + Gerenciar Materiais</button>
+                  <button className="w-full h-10 px-3 rounded-md bg-[#3d3d3d] text-sm text-white/70 flex items-center gap-2 hover:bg-[#4a4a4a]">
+                    <Package size={16} />
+                    Gerenciar Materiais
+                  </button>
                 </Drawer.Trigger>
                 <Drawer.Content>
                   <MaterialsDrawer

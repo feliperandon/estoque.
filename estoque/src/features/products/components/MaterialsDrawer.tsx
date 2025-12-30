@@ -62,7 +62,7 @@ const MaterialsDrawer = ({ value, onChange }: MateriaisDrawerProps) => {
               key={item.materialId}
               className="bg-[#3d3d3d] rounded-xl p-4 mb-3 border border-white/5"
             >
-              <div className="flex justify-between items-start mb-2">
+              <div className="flex justify-between items-center mb-1">
                 <div className="flex items-center gap-2">
                   <span
                     className="w-3 h-3 rounded-full"
@@ -71,66 +71,103 @@ const MaterialsDrawer = ({ value, onChange }: MateriaisDrawerProps) => {
                   <span className="text-white font-medium">
                     {material.name}
                   </span>
-                  <p className="text-gray-400 text-sm">
-                    {formatCurrency(material.costPerUnit)} / {config?.suffix}
-                    <p className="text-gray-400 text-xs">
-                      {material.quantity} {config?.suffix} disponíveis
-                    </p>
-                  </p>
+                  <span className="text-white font-semibold">
+                    {formatCurrency(cost)}
+                  </span>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <input
-                  type="number"
-                  value={item.quantityUsed}
-                  max={material.quantity}
-                  min={0}
-                  className={`w-16 h-8 px-2 rounded text-white text-center ${
-                    isOverLimit
-                      ? "bg-red-900 border border-red-500"
-                      : "bg-[#2f2f2f]"
-                  }`}
-                  onChange={(e) => {
-                    const newQuantity = Number(e.target.value);
-                    onChange(
-                      value.map((v) =>
-                        v.materialId === item.materialId
-                          ? { ...v, quantityUsed: newQuantity }
-                          : v
-                      )
-                    );
-                  }}
-                />
-                {isOverLimit && (
-                  <span className="text-red-500 text-xs">
-                    Estoque insuficiente
-                  </span>
-                )}
-                <span className="text-white">{formatCurrency(cost)}</span>
+              <p className="text-gray-400 text-sm mb-3 ml-5">
+                {formatCurrency(material.costPerUnit)} / {config?.suffix} •{" "}
+                {material.quantity} {config?.suffix} disponíveis
+              </p>
+
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1">
+                  <button
+                    className="w-8 h-8 rounded-lg bg-[#2f2f2f] text-white flex items-center justify-center hover:bg-white/10"
+                    onClick={() => {
+                      if (item.quantityUsed > 0) {
+                        onChange(
+                          value.map((v) =>
+                            v.materialId === item.materialId
+                              ? { ...v, quantityUsed: v.quantityUsed - 1 }
+                              : v
+                          )
+                        );
+                      }
+                    }}
+                  >
+                    -
+                  </button>
+                  <input
+                    type="number"
+                    value={item.quantityUsed}
+                    max={material.quantity}
+                    min={0}
+                    className={`w-16 h-8 px-2 rounded-lg text-white text-center ${
+                      isOverLimit
+                        ? "bg-red-900 border border-red-500"
+                        : "bg-[#2f2f2f]"
+                    }`}
+                    onChange={(e) => {
+                      const newQuantity = Number(e.target.value);
+                      onChange(
+                        value.map((v) =>
+                          v.materialId === item.materialId
+                            ? { ...v, quantityUsed: newQuantity }
+                            : v
+                        )
+                      );
+                    }}
+                  />
+                  <button
+                    className="w-8 h-8 rounded-lg bg-[#2f2f2f] text-white flex items-center justify-center hover:bg-white/10"
+                    onClick={() => {
+                      onChange(
+                        value.map((v) =>
+                          v.materialId === item.materialId
+                            ? { ...v, quantityUsed: v.quantityUsed + 1 }
+                            : v
+                        )
+                      );
+                    }}
+                  >
+                    +
+                  </button>
+                </div>
+
                 <button
                   onClick={() => {
                     onChange(
                       value.filter((v) => v.materialId !== item.materialId)
                     );
                   }}
+                  className="p-2 rounded-lg hover:bg-red-500/10"
                 >
-                  <Trash size={16} className="text-red-500" />
+                  <Trash size={18} className="text-red-500" />
                 </button>
               </div>
+              {isOverLimit && (
+                <p className="text-red-500 text-xs mt-2">
+                  Estoque insuficiente
+                </p>
+              )}
             </div>
           );
         })}
       </div>
-      <div className="flex justify-between items-center py-3 border-t border-white/10 mt-4">
-        <p className="text-gray-400">Custo Total dos Materiais:</p>
-        <p className="text-white font-medium text-lg">
+      <div className="bg-[#2a2a2a] rounded-xl p-4 flex justify-between items-center my-6">
+        <p className="text-gray-400 font-medium">Custo Total dos Materiais:</p>
+        <p className="text-white font-bold text-xl">
           {formatCurrency(totalCost)}
         </p>
       </div>
       <div>
-        <p className="text-gray-400 text-sm mb-2">Materiais disponíveis</p>
+        <p className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-3">
+          Materiais disponíveis ({availableMaterials.length})
+        </p>
 
-        <div>
+        <div className="grid grid-cols-2 gap-3">
           {availableMaterials.map((material) => {
             const category = materialsCategories.find(
               (c) => c.id === material.categoryId
@@ -143,19 +180,26 @@ const MaterialsDrawer = ({ value, onChange }: MateriaisDrawerProps) => {
             return (
               <div
                 key={material.id}
-                className="bg-[#3d3d3d] rounded-lg p-3 flex justify-between items-center"
+                className="bg-[#3d3d3d] rounded-xl p-4 border border-white/5"
               >
-                <div>
-                  <p className="text-white text-sm">{material.name}</p>
-                  <p className="text-gray-400 text-xs">
-                    {formatCurrency(material.costPerUnit)} / {config?.suffix}
-                  </p>
-                  <p className="text-gray-400 text-xs">
-                    {material.quantity} {config?.suffix} disponíveis
-                  </p>
+                <div className="flex items-center gap-2 mb-2">
+                  <span
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: category?.color }}
+                  />
+                  <span className="text-white text-sm font-medium">
+                    {material.name}
+                  </span>
                 </div>
+                <p className="text-gray-400 text-xs mb-1">
+                  {formatCurrency(material.costPerUnit)} / {config?.suffix}
+                </p>
+                <p className="text-gray-400 text-xs mb-3">
+                  {material.quantity} {config?.suffix} disponíveis
+                </p>
+
                 <button
-                  className="text-blue-400 text-sm"
+                  className="w-full py-2 text-blue-400 text-sm bg-blue-400/10 rounded-lg hover:bg-blue-400/20"
                   onClick={() => {
                     onChange([
                       ...value,

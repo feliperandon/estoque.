@@ -10,9 +10,9 @@ const DrawerClose = DrawerPrimitive.Close;
 const DrawerContent = ({ children }: { children: React.ReactNode }) => (
   <DrawerPrimitive.Portal>
     <DrawerOverlay />
-    <DrawerPrimitive.Content className="bg-[#2f2f2f] fixed bottom-0 left-0 right-0 rounded-t-2xl z-50 outline-none">
-      <div className="mx-auto w-12 h-1.5 bg-gray-500 rounded-full my-4" />
-      <div className="p-4">{children}</div>
+    <DrawerPrimitive.Content className="bg-[#2f2f2f] fixed bottom-0 left-0 right-0 rounded-t-2xl z-50 outline-none max-h-[85vh] flex flex-col">
+      <div className="mx-auto w-12 h-1.5 bg-gray-500 rounded-full my-4 shrink-0" />
+      <div className="p-4 overflow-y-auto flex-1">{children}</div>
     </DrawerPrimitive.Content>
   </DrawerPrimitive.Portal>
 );
