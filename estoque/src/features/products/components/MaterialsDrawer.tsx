@@ -4,31 +4,44 @@ import { useMaterialsStore } from "@/features/materials/hooks/useMaterialsStore"
 import { UNIT_TYPE_CONFIG } from "@/features/materials/config/unitTypeConfig";
 
 import { formatCurrency } from "@/lib/formatCurrency";
+
 import { Trash } from "lucide-react";
+
 import { Drawer } from "@/components/ui/Drawer";
+
+import { useState } from "react";
 
 type MateriaisDrawerProps = {
   value: { materialId: string; quantityUsed: number }[];
-  onChange: (value: { materialId: string; quantityUsed: number }[]) => void;
+  onChange: (
+    localValue: { materialId: string; quantityUsed: number }[]
+  ) => void;
 };
 
 const MaterialsDrawer = ({ value, onChange }: MateriaisDrawerProps) => {
+  const [localValue, setLocalValue] = useState(value);
+
   const materials = useMaterialsStore((state) => state.materials);
   const materialsCategories = useMaterialCategoryStore(
     (state) => state.materialCategories
   );
 
-  const selectedIds = value.map((item) => item.materialId);
+  const selectedIds = localValue.map((item) => item.materialId);
 
   const availableMaterials = materials.filter(
     (material) => !selectedIds.includes(material.id)
   );
 
-  const totalCost = value.reduce((acc, item) => {
+  const totalCost = localValue.reduce((acc, item) => {
     const material = materials.find((m) => m.id === item.materialId);
     if (!material) return acc;
     return acc + item.quantityUsed * material.costPerUnit;
   }, 0);
+
+  const overLimit = localValue.some((item) => {
+    const material = materials.find((m) => m.id === item.materialId);
+    return material && item.quantityUsed > material.quantity;
+  });
 
   return (
     <div className="flex flex-col h-full">
@@ -43,10 +56,10 @@ const MaterialsDrawer = ({ value, onChange }: MateriaisDrawerProps) => {
         </div>
         <div>
           <p className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-3">
-            Materiais Selecionados ({value.length})
+            Materiais Selecionados ({localValue.length})
           </p>
 
-          {value.map((item) => {
+          {localValue.map((item) => {
             const material = materials.find((m) => m.id === item.materialId);
             if (!material) return null;
 
@@ -90,8 +103,8 @@ const MaterialsDrawer = ({ value, onChange }: MateriaisDrawerProps) => {
                       className="w-6 h-6 rounded bg-[#2f2f2f] text-white text-sm flex items-center justify-center hover:bg-white/10"
                       onClick={() => {
                         if (item.quantityUsed > 0) {
-                          onChange(
-                            value.map((v) =>
+                          setLocalValue(
+                            localValue.map((v) =>
                               v.materialId === item.materialId
                                 ? { ...v, quantityUsed: v.quantityUsed - 1 }
                                 : v
@@ -112,8 +125,8 @@ const MaterialsDrawer = ({ value, onChange }: MateriaisDrawerProps) => {
                       }`}
                       onChange={(e) => {
                         const newQuantity = Number(e.target.value);
-                        onChange(
-                          value.map((v) =>
+                        setLocalValue(
+                          localValue.map((v) =>
                             v.materialId === item.materialId
                               ? { ...v, quantityUsed: newQuantity }
                               : v
@@ -124,21 +137,24 @@ const MaterialsDrawer = ({ value, onChange }: MateriaisDrawerProps) => {
                     <button
                       className="w-6 h-6 rounded bg-[#2f2f2f] text-white text-sm flex items-center justify-center hover:bg-white/10"
                       onClick={() => {
-                        onChange(
-                          value.map((v) =>
+                        setLocalValue(
+                          localValue.map((v) =>
                             v.materialId === item.materialId
                               ? { ...v, quantityUsed: v.quantityUsed + 1 }
                               : v
                           )
                         );
                       }}
+                      disabled={overLimit}
                     >
                       +
                     </button>
                     <button
                       onClick={() => {
-                        onChange(
-                          value.filter((v) => v.materialId !== item.materialId)
+                        setLocalValue(
+                          localValue.filter(
+                            (v) => v.materialId !== item.materialId
+                          )
                         );
                       }}
                       className="ml-1 p-1 rounded hover:bg-red-500/10"
@@ -197,8 +213,8 @@ const MaterialsDrawer = ({ value, onChange }: MateriaisDrawerProps) => {
                   <button
                     className="w-full py-2 text-blue-400 text-sm bg-blue-400/10 rounded-lg hover:bg-blue-400/20 mt-auto"
                     onClick={() => {
-                      onChange([
-                        ...value,
+                      setLocalValue([
+                        ...localValue,
                         { materialId: material.id, quantityUsed: 1 },
                       ]);
                     }}
@@ -220,11 +236,23 @@ const MaterialsDrawer = ({ value, onChange }: MateriaisDrawerProps) => {
             {formatCurrency(totalCost)}
           </p>
         </div>
-        <Drawer.Close asChild>
-          <button className="w-full py-3 bg-white text-black rounded-lg font-medium cursor-pointer">
+        {overLimit ? (
+          <button
+            className="w-full py-3 bg-gray-500 text-gray-300 rounded-lg font-medium cursor-not-allowed"
+            disabled
+          >
             Confirmar Materiais
           </button>
-        </Drawer.Close>
+        ) : (
+          <Drawer.Close asChild>
+            <button
+              className="w-full py-3 bg-white text-black rounded-lg font-medium cursor-pointer hover:bg-gray-100"
+              onClick={() => onChange(localValue)}
+            >
+              Confirmar Materiais
+            </button>
+          </Drawer.Close>
+        )}
         <Drawer.Close asChild>
           <button className="w-full py-3 bg-transparent border border-white/20 text-white rounded-lg cursosr-pointer">
             Cancelar
