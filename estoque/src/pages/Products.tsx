@@ -9,6 +9,7 @@ import ProductCard from "@/features/products/components/ProductCard";
 import ProductForm from "@/features/products/components/ProductForm";
 
 import { useProductsStore } from "@/features/products/hooks/useProductsStore";
+import { useMaterialsStore } from "@/features/materials/hooks/useMaterialsStore";
 
 import type { Product } from "@/features/products/types/product";
 
@@ -19,12 +20,19 @@ const Products = () => {
 
   const removeProduct = useProductsStore((state) => state.removeProduct);
 
+  const restoreStock = useMaterialsStore((state) => state.restoreStock);
+
   const handleEditProduct = (product: Product) => {
     setEditingProduct(product);
     setIsOpen(true);
   };
 
   const handleRemoveProduct = (productId: string) => {
+    const product = products.find((p) => p.id === productId);
+
+    if (product?.materials && product.materials.length > 0) {
+      restoreStock(product.materials);
+    }
     removeProduct(productId);
   };
 

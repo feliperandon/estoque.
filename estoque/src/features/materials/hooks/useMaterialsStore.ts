@@ -49,6 +49,8 @@ type MaterialState = {
   addMaterial: (item: Material) => void;
   updateMaterial: (id: string, data: Partial<Material>) => void;
   removeMaterial: (id: string) => void;
+  consumeStock: (items: { materialId: string; quantityUsed: number }[]) => void;
+  restoreStock: (items: { materialId: string; quantityUsed: number }[]) => void;
 };
 
 export const useMaterialsStore = create<MaterialState>((set) => {
@@ -65,6 +67,32 @@ export const useMaterialsStore = create<MaterialState>((set) => {
     removeMaterial: (id) =>
       set((state) => ({
         materials: state.materials.filter((item) => item.id !== id),
+      })),
+    consumeStock: (items) =>
+      set((state) => ({
+        materials: state.materials.map((material) => {
+          const used = items.find((item) => item.materialId === material.id);
+          if (used) {
+            return {
+              ...material,
+              quantity: material.quantity - used.quantityUsed,
+            };
+          }
+          return material;
+        }),
+      })),
+    restoreStock: (items) =>
+      set((state) => ({
+        materials: state.materials.map((material) => {
+          const used = items.find((item) => item.materialId === material.id);
+          if (used) {
+            return {
+              ...material,
+              quantity: material.quantity + used.quantityUsed,
+            };
+          }
+          return material;
+        }),
       })),
   };
 });

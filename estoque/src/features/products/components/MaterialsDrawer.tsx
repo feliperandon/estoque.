@@ -9,22 +9,43 @@ import { Trash } from "lucide-react";
 
 import { Drawer } from "@/components/ui/Drawer";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type MateriaisDrawerProps = {
   value: { materialId: string; quantityUsed: number }[];
   onChange: (
     localValue: { materialId: string; quantityUsed: number }[]
   ) => void;
+  originalMaterials?: { materialId: string; quantityUsed: number }[];
 };
 
-const MaterialsDrawer = ({ value, onChange }: MateriaisDrawerProps) => {
+const MaterialsDrawer = ({
+  value,
+  onChange,
+  originalMaterials,
+}: MateriaisDrawerProps) => {
   const [localValue, setLocalValue] = useState(value);
+
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
 
   const materials = useMaterialsStore((state) => state.materials);
   const materialsCategories = useMaterialCategoryStore(
     (state) => state.materialCategories
   );
+
+  const getAvailableQuantity = (materialId: string) => {
+    const material = materials.find((m) => m.id === materialId);
+    if (!material) return 0;
+
+    const original = originalMaterials?.find(
+      (m) => m.materialId === materialId
+    );
+    const originalQuantity = original?.quantityUsed || 0;
+
+    return material.quantity + originalQuantity;
+  };
 
   const selectedIds = localValue.map((item) => item.materialId);
 
@@ -39,8 +60,7 @@ const MaterialsDrawer = ({ value, onChange }: MateriaisDrawerProps) => {
   }, 0);
 
   const overLimit = localValue.some((item) => {
-    const material = materials.find((m) => m.id === item.materialId);
-    return material && item.quantityUsed > material.quantity;
+    return item.quantityUsed > getAvailableQuantity(item.materialId);
   });
 
   return (
@@ -71,7 +91,8 @@ const MaterialsDrawer = ({ value, onChange }: MateriaisDrawerProps) => {
               : null;
             const cost = item.quantityUsed * material.costPerUnit;
 
-            const isOverLimit = item.quantityUsed > material.quantity;
+            const isOverLimit =
+              item.quantityUsed > getAvailableQuantity(item.materialId);
 
             return (
               <div
@@ -95,7 +116,7 @@ const MaterialsDrawer = ({ value, onChange }: MateriaisDrawerProps) => {
                 <div className="flex items-center justify-between">
                   <span className="text-gray-400 text-xs">
                     {formatCurrency(material.costPerUnit)}/{config?.suffix} •{" "}
-                    {material.quantity} disp.
+                    {getAvailableQuantity(item.materialId)} disp.
                   </span>
 
                   <div className="flex items-center gap-1">

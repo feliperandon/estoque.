@@ -5,6 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useProductsStore } from "../hooks/useProductsStore";
 import { useCategoriesStore } from "../hooks/useCategoriesStore";
 
+import { useMaterialsStore } from "@/features/materials/hooks/useMaterialsStore";
+
 import { Input, Button, FormField, Textarea } from "@/components/ui";
 import { Drawer } from "@/components/ui/Drawer";
 
@@ -50,6 +52,9 @@ const defaultValues: z.infer<typeof productSchema> = {
 };
 
 const ProductForm = ({ onSubmitSuccess, initialData }: ProductFormProps) => {
+  const consumeStock = useMaterialsStore((state) => state.consumeStock);
+  const restoreStock = useMaterialsStore((state) => state.restoreStock);
+
   const form = useForm({
     resolver: zodResolver(productSchema),
     defaultValues,
@@ -76,19 +81,32 @@ const ProductForm = ({ onSubmitSuccess, initialData }: ProductFormProps) => {
   const categories = useCategoriesStore((state) => state.categories);
 
   const onSubmit = (data: z.infer<typeof productSchema>) => {
-    initialData
-      ? updateProduct(initialData.id, data)
-      : addProduct({
-          id: crypto.randomUUID(),
-          name: data.name,
-          quantity: data.quantity,
-          imageUrl: data.imageUrl,
-          price: data.price,
-          timeSpent: data.timeSpent,
-          description: data.description,
-          categories: data.categories || [],
-          materials: data.materials || [],
-        });
+    if (initialData) {
+      if (initialData.materials && initialData.materials.length > 0) {
+        restoreStock(initialData.materials);
+      }
+      if (data.materials && data.materials.length > 0) {
+        consumeStock(data.materials);
+      }
+      updateProduct(initialData.id, data);
+    } else {
+      addProduct({
+        id: crypto.randomUUID(),
+        name: data.name,
+        quantity: data.quantity,
+        imageUrl: data.imageUrl,
+        price: data.price,
+        timeSpent: data.timeSpent,
+        description: data.description,
+        categories: data.categories || [],
+        materials: data.materials || [],
+      });
+
+      if (data.materials && data.materials.length > 0) {
+        consumeStock(data.materials);
+      }
+    }
+
     onSubmitSuccess();
   };
 
@@ -163,6 +181,7 @@ const ProductForm = ({ onSubmitSuccess, initialData }: ProductFormProps) => {
                   <MaterialsDrawer
                     value={form.watch("materials") || []}
                     onChange={(newValue) => setValue("materials", newValue)}
+                    originalMaterials={initialData?.materials || []}
                   />
                 </Drawer.Content>
               </Drawer.Root>
