@@ -63,6 +63,24 @@ const MaterialsDrawer = ({
     return item.quantityUsed > getAvailableQuantity(item.materialId);
   });
 
+  const handleQuantityChange = (materialId: string, newQuantity: number) => {
+    if (newQuantity < 0) return;
+
+    setLocalValue(
+      localValue.map((v) =>
+        v.materialId === materialId ? { ...v, quantityUsed: newQuantity } : v
+      )
+    );
+  };
+
+  const handleRemove = (materialId: string) => {
+    setLocalValue(localValue.filter((v) => v.materialId !== materialId));
+  };
+
+  const handleAdd = (materialId: string) => {
+    setLocalValue([...localValue, { materialId, quantityUsed: 1 }]);
+  };
+
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto">
@@ -122,17 +140,12 @@ const MaterialsDrawer = ({
                   <div className="flex items-center gap-1">
                     <button
                       className="w-6 h-6 rounded bg-[#2f2f2f] text-white text-sm flex items-center justify-center hover:bg-white/10"
-                      onClick={() => {
-                        if (item.quantityUsed > 0) {
-                          setLocalValue(
-                            localValue.map((v) =>
-                              v.materialId === item.materialId
-                                ? { ...v, quantityUsed: v.quantityUsed - 1 }
-                                : v
-                            )
-                          );
-                        }
-                      }}
+                      onClick={() =>
+                        handleQuantityChange(
+                          item.materialId,
+                          item.quantityUsed - 1
+                        )
+                      }
                     >
                       -
                     </button>
@@ -144,41 +157,28 @@ const MaterialsDrawer = ({
                           ? "bg-red-900 border border-red-500"
                           : "bg-[#2f2f2f]"
                       }`}
-                      onChange={(e) => {
-                        const newQuantity = Number(e.target.value);
-                        setLocalValue(
-                          localValue.map((v) =>
-                            v.materialId === item.materialId
-                              ? { ...v, quantityUsed: newQuantity }
-                              : v
-                          )
-                        );
-                      }}
+                      onChange={(e) =>
+                        handleQuantityChange(
+                          item.materialId,
+                          Number(e.target.value)
+                        )
+                      }
                     />
                     <button
                       className="w-6 h-6 rounded bg-[#2f2f2f] text-white text-sm flex items-center justify-center hover:bg-white/10"
-                      onClick={() => {
-                        setLocalValue(
-                          localValue.map((v) =>
-                            v.materialId === item.materialId
-                              ? { ...v, quantityUsed: v.quantityUsed + 1 }
-                              : v
-                          )
-                        );
-                      }}
+                      onClick={() =>
+                        handleQuantityChange(
+                          item.materialId,
+                          item.quantityUsed + 1
+                        )
+                      }
                       disabled={overLimit}
                     >
                       +
                     </button>
                     <button
-                      onClick={() => {
-                        setLocalValue(
-                          localValue.filter(
-                            (v) => v.materialId !== item.materialId
-                          )
-                        );
-                      }}
-                      className="ml-1 p-1 rounded hover:bg-red-500/10"
+                      onClick={() => handleRemove(item.materialId)}
+                      className="ml-1 p-1 rounded hover:bg-red-500/10 cursor-pointer"
                     >
                       <Trash size={14} className="text-red-500" />
                     </button>
@@ -232,13 +232,8 @@ const MaterialsDrawer = ({
                   </p>
 
                   <button
-                    className="w-full py-2 text-blue-400 text-sm bg-blue-400/10 rounded-lg hover:bg-blue-400/20 mt-auto"
-                    onClick={() => {
-                      setLocalValue([
-                        ...localValue,
-                        { materialId: material.id, quantityUsed: 1 },
-                      ]);
-                    }}
+                    className="w-full py-2 text-blue-400 text-sm bg-blue-400/10 rounded-lg hover:bg-blue-400/20 mt-auto cursor-pointer"
+                    onClick={() => handleAdd(material.id)}
                   >
                     + Adicionar
                   </button>
