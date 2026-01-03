@@ -66,9 +66,19 @@ const MaterialsDrawer = ({
   const handleQuantityChange = (materialId: string, newQuantity: number) => {
     if (newQuantity < 0) return;
 
+    const material = materials.find((m) => m.id === materialId);
+    const category = materialsCategories.find(
+      (c) => c.id === material?.categoryId
+    );
+    const config = category ? UNIT_TYPE_CONFIG[category.unitType] : null;
+
+    const finalQuantity = config?.allowsDecimal
+      ? newQuantity
+      : Math.round(newQuantity);
+
     setLocalValue(
       localValue.map((v) =>
-        v.materialId === materialId ? { ...v, quantityUsed: newQuantity } : v
+        v.materialId === materialId ? { ...v, quantityUsed: finalQuantity } : v
       )
     );
   };

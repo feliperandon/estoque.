@@ -75,7 +75,8 @@ export const useMaterialsStore = create<MaterialState>((set) => {
           if (used) {
             return {
               ...material,
-              quantity: material.quantity - used.quantityUsed,
+              quantity:
+                Math.round((material.quantity - used.quantityUsed) * 100) / 100,
             };
           }
           return material;
@@ -88,7 +89,8 @@ export const useMaterialsStore = create<MaterialState>((set) => {
           if (used) {
             return {
               ...material,
-              quantity: material.quantity + used.quantityUsed,
+              quantity:
+                Math.round((material.quantity + used.quantityUsed) * 100) / 100,
             };
           }
           return material;
