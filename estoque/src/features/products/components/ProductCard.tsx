@@ -57,7 +57,7 @@ const ProductCard = ({ product, onEdit, onRemove }: ProductCardProps) => {
         <h2 className="text-lg font-semibold">{product.name}</h2>
 
         {product.description && (
-          <p className="text-sm text-gray-300 whitespace-pre-wrap wrap-break-word">
+          <p className="text-sm text-gray-300 line-clamp-2">
             {product.description}
           </p>
         )}

@@ -144,7 +144,11 @@ const ProductForm = ({ onSubmitSuccess, initialData }: ProductFormProps) => {
               label="Descrição"
               error={form.formState.errors.description?.message}
             >
-              <Textarea rows={4} {...form.register("description")} />
+              <Textarea
+                rows={8}
+                className="resize-none"
+                {...form.register("description")}
+              />
             </FormField>
           </div>
 
