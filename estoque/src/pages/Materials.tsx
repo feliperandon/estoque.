@@ -29,6 +29,8 @@ const Materials = () => {
 
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
+  const [search, setSearch] = useState("");
+
   const handleCreateMaterial = () => {
     setEditingMaterial(null);
     setIsOpen(true);
@@ -50,12 +52,20 @@ const Materials = () => {
     }
   };
 
+  const filteredMaterials = materials.filter((material) =>
+    material.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="bg-[#474747] min-h-screen">
       <Header title="Materiais" description="Gerencie seus materiais." />
       <div className="h-px w-full bg-white/20 mb-6"></div>
       <div className="flex justify-between mt-4 mb-4">
-        <Searchbar placeholder="Buscar materiais..." />
+        <Searchbar
+          placeholder="Buscar materiais..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <div className="flex gap-2">
           <Button
             className="flex gap-2 items-center"
@@ -77,7 +87,7 @@ const Materials = () => {
 
       <div>
         <MaterialTable
-          materials={materials}
+          materials={filteredMaterials}
           onEdit={handleEditMaterial}
           onRemove={handleRemoveMaterial}
           categories={categories}
