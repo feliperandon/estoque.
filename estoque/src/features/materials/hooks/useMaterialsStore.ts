@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
+
 import type { Material } from "../types/materials";
 
 const initialMaterials: Material[] = [
@@ -53,48 +55,59 @@ type MaterialState = {
   restoreStock: (items: { materialId: string; quantityUsed: number }[]) => void;
 };
 
-export const useMaterialsStore = create<MaterialState>((set) => {
-  return {
-    materials: initialMaterials,
-    addMaterial: (item) =>
-      set((state) => ({ materials: [...state.materials, item] })),
-    updateMaterial: (id, data) =>
-      set((state) => ({
-        materials: state.materials.map((item) =>
-          item.id === id ? { ...item, ...data } : item
-        ),
-      })),
-    removeMaterial: (id) =>
-      set((state) => ({
-        materials: state.materials.filter((item) => item.id !== id),
-      })),
-    consumeStock: (items) =>
-      set((state) => ({
-        materials: state.materials.map((material) => {
-          const used = items.find((item) => item.materialId === material.id);
-          if (used) {
-            return {
-              ...material,
-              quantity:
-                Math.round((material.quantity - used.quantityUsed) * 100) / 100,
-            };
-          }
-          return material;
-        }),
-      })),
-    restoreStock: (items) =>
-      set((state) => ({
-        materials: state.materials.map((material) => {
-          const used = items.find((item) => item.materialId === material.id);
-          if (used) {
-            return {
-              ...material,
-              quantity:
-                Math.round((material.quantity + used.quantityUsed) * 100) / 100,
-            };
-          }
-          return material;
-        }),
-      })),
-  };
-});
+export const useMaterialsStore = create<MaterialState>()(
+  persist(
+    (set) => {
+      return {
+        materials: initialMaterials,
+        addMaterial: (item) =>
+          set((state) => ({ materials: [...state.materials, item] })),
+        updateMaterial: (id, data) =>
+          set((state) => ({
+            materials: state.materials.map((item) =>
+              item.id === id ? { ...item, ...data } : item
+            ),
+          })),
+        removeMaterial: (id) =>
+          set((state) => ({
+            materials: state.materials.filter((item) => item.id !== id),
+          })),
+        consumeStock: (items) =>
+          set((state) => ({
+            materials: state.materials.map((material) => {
+              const used = items.find(
+                (item) => item.materialId === material.id
+              );
+              if (used) {
+                return {
+                  ...material,
+                  quantity:
+                    Math.round((material.quantity - used.quantityUsed) * 100) /
+                    100,
+                };
+              }
+              return material;
+            }),
+          })),
+        restoreStock: (items) =>
+          set((state) => ({
+            materials: state.materials.map((material) => {
+              const used = items.find(
+                (item) => item.materialId === material.id
+              );
+              if (used) {
+                return {
+                  ...material,
+                  quantity:
+                    Math.round((material.quantity + used.quantityUsed) * 100) /
+                    100,
+                };
+              }
+              return material;
+            }),
+          })),
+      };
+    },
+    { name: "materials-storage" }
+  )
+);

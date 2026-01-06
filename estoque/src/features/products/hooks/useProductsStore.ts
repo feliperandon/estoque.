@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
+
 import type { Product } from "../types/product";
 
 const initialProducts: Product[] = [
@@ -36,20 +38,27 @@ type ProductState = {
   removeProduct: (id: string) => void;
 };
 
-export const useProductsStore = create<ProductState>((set) => {
-  return {
-    products: initialProducts,
-    addProduct: (item) =>
-      set((state) => ({ products: [...state.products, item] })),
-    updateProduct: (id, data) =>
-      set((state) => ({
-        products: state.products.map((item) =>
-          item.id === id ? { ...item, ...data } : item
-        ),
-      })),
-    removeProduct: (id) =>
-      set((state) => ({
-        products: state.products.filter((item) => item.id !== id),
-      })),
-  };
-});
+export const useProductsStore = create<ProductState>()(
+  persist(
+    (set) => {
+      return {
+        products: initialProducts,
+        addProduct: (item) =>
+          set((state) => ({ products: [...state.products, item] })),
+        updateProduct: (id, data) =>
+          set((state) => ({
+            products: state.products.map((item) =>
+              item.id === id ? { ...item, ...data } : item
+            ),
+          })),
+        removeProduct: (id) =>
+          set((state) => ({
+            products: state.products.filter((item) => item.id !== id),
+          })),
+      };
+    },
+    {
+      name: "products-storage",
+    }
+  )
+);

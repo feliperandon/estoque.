@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 import type { MaterialCategory } from "../types/materialCategory";
 
@@ -48,24 +49,29 @@ type MaterialCategoryState = {
   removeMaterialCategory: (id: string) => void;
 };
 
-export const useMaterialCategoryStore = create<MaterialCategoryState>((set) => {
-  return {
-    materialCategories: initialMaterialsCategories,
-    addMaterialCategory: (item) =>
-      set((state) => ({
-        materialCategories: [...state.materialCategories, item],
-      })),
-    updateMaterialCategory: (id, data) =>
-      set((state) => ({
-        materialCategories: state.materialCategories.map((category) =>
-          category.id === id ? { ...category, ...data } : category
-        ),
-      })),
-    removeMaterialCategory: (id) =>
-      set((state) => ({
-        materialCategories: state.materialCategories.filter(
-          (category) => category.id !== id
-        ),
-      })),
-  };
-});
+export const useMaterialCategoryStore = create<MaterialCategoryState>()(
+  persist(
+    (set) => {
+      return {
+        materialCategories: initialMaterialsCategories,
+        addMaterialCategory: (item) =>
+          set((state) => ({
+            materialCategories: [...state.materialCategories, item],
+          })),
+        updateMaterialCategory: (id, data) =>
+          set((state) => ({
+            materialCategories: state.materialCategories.map((category) =>
+              category.id === id ? { ...category, ...data } : category
+            ),
+          })),
+        removeMaterialCategory: (id) =>
+          set((state) => ({
+            materialCategories: state.materialCategories.filter(
+              (category) => category.id !== id
+            ),
+          })),
+      };
+    },
+    { name: "material-categories-storage" }
+  )
+);
