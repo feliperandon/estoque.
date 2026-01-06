@@ -18,6 +18,8 @@ const Products = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
+  const [search, setSearch] = useState("");
+
   const removeProduct = useProductsStore((state) => state.removeProduct);
 
   const restoreStock = useMaterialsStore((state) => state.restoreStock);
@@ -43,12 +45,20 @@ const Products = () => {
     }
   };
 
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="bg-[#474747] min-h-screen">
       <Header title="Produtos" description="Gerencie seus produtos." />
       <div className="h-px w-full bg-white/20 mb-6"></div>
       <div className="flex justify-between mt-4 mb-4">
-        <Searchbar placeholder="Buscar produtos..." />
+        <Searchbar
+          placeholder="Buscar produtos..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <Modal.Root open={isOpen} onOpenChange={handleModalChange}>
           <Modal.Trigger>
             <Button
@@ -73,7 +83,7 @@ const Products = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 items-start">
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <ProductCard
             key={product.id}
             product={product}
