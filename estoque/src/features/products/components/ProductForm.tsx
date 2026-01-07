@@ -11,15 +11,15 @@ import { Input, Button, FormField, Textarea } from "@/components/ui";
 import { Drawer } from "@/components/ui/Drawer";
 
 import ImageUpload from "./ImageUpload";
-import CategorySelect from "./CategorySelect";
-
 import MaterialsDrawer from "./MaterialsDrawer";
+import CategoryDrawer from "./CategoryDrawer";
 
 import type { Product } from "../types/product";
 
 import { moneySchema } from "@/lib/moneySchema";
 
 import { useEffect } from "react";
+
 import { Package } from "lucide-react";
 
 const productSchema = z.object({
@@ -156,7 +156,7 @@ const ProductForm = ({ onSubmitSuccess, initialData }: ProductFormProps) => {
             <div className="w-px bg-white/10 h-full" />
           </div>
 
-          <div className="flex flex-col gap-4 pr-2">
+          <div className="flex flex-col gap-4 pr-2 min-w-0">
             <FormField
               label="Quantidade"
               error={form.formState.errors.quantity?.message}
@@ -165,13 +165,23 @@ const ProductForm = ({ onSubmitSuccess, initialData }: ProductFormProps) => {
             </FormField>
 
             <FormField label="Categorias">
-              <CategorySelect
-                options={categories}
-                value={form.watch("categories") || []}
-                onChange={(newValue) => {
-                  setValue("categories", newValue);
-                }}
-              />
+              <Drawer.Root>
+                <Drawer.Trigger asChild>
+                  <button className="w-full max-w-full h-10 px-3 rounded-md bg-[#3d3d3d] text-sm text-white/70 flex items-center gap-2 hover:bg-[#4a4a4a]">
+                    <span className="truncate">
+                      {(form.watch("categories") || []).length === 0
+                        ? "Selecionar Categorias"
+                        : (form.watch("categories") || []).join(", ")}
+                    </span>
+                  </button>
+                </Drawer.Trigger>
+                <Drawer.Content>
+                  <CategoryDrawer
+                    value={form.watch("categories") || []}
+                    onChange={(newValue) => setValue("categories", newValue)}
+                  />
+                </Drawer.Content>
+              </Drawer.Root>
             </FormField>
             <FormField label="Materiais">
               <Drawer.Root>
