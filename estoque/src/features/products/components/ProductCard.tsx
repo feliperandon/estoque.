@@ -91,7 +91,7 @@ const ProductCard = ({ product, onEdit, onRemove }: ProductCardProps) => {
         </div>
 
         <div className="flex flex-col text-right gap-2">
-          <span>Custo: {formatCurrency(product.price ?? 0)}</span>
+          <span>Custo: {formatCurrency(product.cost ?? 0)}</span>
           <span className="text-white font-bold text-2xl">
             {formatCurrency(product.price ?? 0)}
           </span>

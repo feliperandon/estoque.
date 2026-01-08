@@ -78,7 +78,17 @@ const ProductForm = ({ onSubmitSuccess, initialData }: ProductFormProps) => {
   const addProduct = useProductsStore((state) => state.addProduct);
   const updateProduct = useProductsStore((state) => state.updateProduct);
 
-  const categories = useCategoriesStore((state) => state.categories);
+  const calculateCost = (
+    materials: { materialId: string; quantityUsed: number }[]
+  ) => {
+    const allMaterials = useMaterialsStore.getState().materials;
+
+    return materials.reduce((total, item) => {
+      const material = allMaterials.find((m) => m.id === item.materialId);
+      if (!material) return total;
+      return total + item.quantityUsed * material.costPerUnit;
+    }, 0);
+  };
 
   const onSubmit = (data: z.infer<typeof productSchema>) => {
     if (initialData) {
@@ -88,7 +98,10 @@ const ProductForm = ({ onSubmitSuccess, initialData }: ProductFormProps) => {
       if (data.materials && data.materials.length > 0) {
         consumeStock(data.materials);
       }
-      updateProduct(initialData.id, data);
+      updateProduct(initialData.id, {
+        ...data,
+        cost: calculateCost(data.materials || []),
+      });
     } else {
       addProduct({
         id: crypto.randomUUID(),
@@ -96,6 +109,7 @@ const ProductForm = ({ onSubmitSuccess, initialData }: ProductFormProps) => {
         quantity: data.quantity,
         imageUrl: data.imageUrl,
         price: data.price,
+        cost: calculateCost(data.materials || []),
         timeSpent: data.timeSpent,
         description: data.description,
         categories: data.categories || [],
