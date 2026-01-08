@@ -12,6 +12,7 @@ import { useProductsStore } from "@/features/products/hooks/useProductsStore";
 import { useMaterialsStore } from "@/features/materials/hooks/useMaterialsStore";
 
 import type { Product } from "@/features/products/types/product";
+import { Plus } from "lucide-react";
 
 const Products = () => {
   const products = useProductsStore((state) => state.products);
@@ -66,7 +67,9 @@ const Products = () => {
                 setEditingProduct(null);
                 setIsOpen(true);
               }}
+              className="flex gap-2 items-center"
             >
+              <Plus size={18} />
               Novo Produto
             </Button>
           </Modal.Trigger>
